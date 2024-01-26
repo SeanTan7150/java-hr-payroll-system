@@ -6,19 +6,26 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String icNumber;
+    private String employeeId;
+    private String jobPosition;
     private String email;
     private double allowance;
     private double netSalary;
     private double grossSalary;
     private double basicSalary;
     private double incomeTax;
+    private double deduction;
     
-    public Employee(String username, String password, String firstName, String lastName, String icNumber, String email) {
+//    public static final double EPF = 0.09; // get data from server maybe
+//    public static final double SOCSO = 0.005;
+    
+    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId, String email) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.icNumber = icNumber;
+        this.employeeId = employeeId;
         this.email = email;
         allowance = -1;
         netSalary = -1;
@@ -27,12 +34,15 @@ public class Employee {
         incomeTax = -1;
     }
 
-    public Employee(String username, String password, String firstName, String lastName, String icNumber, String email, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax) {
+    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId,
+            String jobPosition, String email, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.icNumber = icNumber;
+        this.employeeId = employeeId;
+        this.jobPosition = jobPosition;
         this.email = email;
         this.allowance = allowance;
         this.netSalary = netSalary;
@@ -75,6 +85,22 @@ public class Employee {
 
     public void setIcNumber(String icNumber) {
         this.icNumber = icNumber;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getJobPosition() {
+        return jobPosition;
+    }
+
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
     public String getEmail() {
