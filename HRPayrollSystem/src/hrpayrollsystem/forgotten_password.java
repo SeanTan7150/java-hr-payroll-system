@@ -20,6 +20,7 @@ import javax.mail.internet.MimeMessage;
 
 public class forgotten_password extends javax.swing.JFrame {
     int storedOTP;
+    long storedTimestamp;
     /**
      * Creates new form forgotten_password
      */
@@ -206,7 +207,10 @@ public class forgotten_password extends javax.swing.JFrame {
             String email = getEmailByUsername(username);
             // Generate a random 6-digit OTP
             Random random = new Random();
-            int otp = 100000 + random.nextInt(900000);
+            int otp = 100000 + random.nextInt(900000); //store the int between 100000 and 999999
+
+            // Record the timestamp which generate the otp
+            long timestamp = System.currentTimeMillis();
 
             try {
                 // Send email with OTP to the user
@@ -214,6 +218,8 @@ public class forgotten_password extends javax.swing.JFrame {
                 
                 // Store the generated OTP and the user's email for verification later
                 storedOTP = otp;
+                storedTimestamp = timestamp;
+
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
@@ -281,11 +287,11 @@ public class forgotten_password extends javax.swing.JFrame {
     private void sendEmail(String email, int otp) throws UnsupportedEncodingException {
         // use the Gmail SMTP server to send emails through JavaMail
         final String sender_username = "chyepeng2108@gmail.com"; 
-        final String password = "xxxxxxxxx"; //actual app password in the google acc
+        final String password = "xx"; //actual app password in the google acc
     
         String subject = " Password Reset for the Payroll System";
         String message = "Hi, " + username_field.getText() + ". \nYour OTP for password reset is " + otp 
-                + ". Please enter the received OTP when resetting your password. "
+                + ". Please enter the received OTP when resetting your password within 30 minutes. "
                 + "If you didn't request a password reset, please ignore this email. "
                 + "\n\n\nSincerely, \nAdmin";
     
@@ -353,13 +359,17 @@ public class forgotten_password extends javax.swing.JFrame {
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        // Prompt user to enter OTP
         int enteredOTP = Integer.parseInt(otp_field.getText()); 
         String new_pw = String.valueOf(new_pw_field.getPassword()); 
         String re_pass = String.valueOf(confirm_new_pw_field.getPassword());
         
+        // set expiration of OTP
+        long current_time = System.currentTimeMillis();
+        long time_diff = current_time - storedTimestamp;
+        long expirationTime = 30 * 60 * 1000; // 30 min in milliseconds 
+        
         // Verify OTP
-        if (enteredOTP == storedOTP) {
+        if (enteredOTP == storedOTP  && time_diff <= expirationTime) {
             if(!new_pw.equals(re_pass))
             {
                 JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
@@ -369,6 +379,8 @@ public class forgotten_password extends javax.swing.JFrame {
                 String username = username_field.getText();
                 updatePassword(username, new_pw);
             }
+        } else if (time_diff > expirationTime) {
+            JOptionPane.showMessageDialog(this, "OTP has expired. Please request a new OTP.");
         } else {
             JOptionPane.showMessageDialog(this, "Invalid OTP. Password update failed.");
         }
