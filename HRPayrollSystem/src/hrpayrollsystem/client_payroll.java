@@ -1,3 +1,6 @@
+package hrpayrollsystem;
+
+import hrpayrollsystem.client_homepage;
 import com.itextpdf.text.Chunk;
 import java.io.FileNotFoundException;  
 import java.io.FileOutputStream;  

@@ -1,3 +1,7 @@
+package hrpayrollsystem;
+
+import hrpayrollsystem.loginModel;
+import hrpayrollsystem.login;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,3 +1,7 @@
+package hrpayrollsystem;
+
+import hrpayrollsystem.loginModel;
+import hrpayrollsystem.login;
 import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
@@ -287,7 +291,7 @@ public class forgotten_password extends javax.swing.JFrame {
     private void sendEmail(String email, int otp) throws UnsupportedEncodingException {
         // use the Gmail SMTP server to send emails through JavaMail
         final String sender_username = "chyepeng2108@gmail.com"; 
-        final String password = "xx"; //actual app password in the google acc
+        final String password = "llgu euxd qxbf hmbd"; //actual app password in the google acc
     
         String subject = " Password Reset for the Payroll System";
         String message = "Hi, " + username_field.getText() + ". \nYour OTP for password reset is " + otp 

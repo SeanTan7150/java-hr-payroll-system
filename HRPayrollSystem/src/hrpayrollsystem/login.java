@@ -1,3 +1,5 @@
+package hrpayrollsystem;
+
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
