@@ -1,7 +1,7 @@
 package hrpayrollsystem;
 
-import hrpayrollsystem.loginModel;
-import hrpayrollsystem.login;
+//import hrpayrollsystem.loginModel;
+//import hrpayrollsystem.login;
 import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
@@ -291,7 +291,7 @@ public class forgotten_password extends javax.swing.JFrame {
     private void sendEmail(String email, int otp) throws UnsupportedEncodingException {
         // use the Gmail SMTP server to send emails through JavaMail
         final String sender_username = "chyepeng2108@gmail.com"; 
-        final String password = "llgu euxd qxbf hmbd"; //actual app password in the google acc
+        final String password = "xxxx"; //actual app password in the google acc
     
         String subject = " Password Reset for the Payroll System";
         String message = "Hi, " + username_field.getText() + ". \nYour OTP for password reset is " + otp 
@@ -363,9 +363,24 @@ public class forgotten_password extends javax.swing.JFrame {
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        int enteredOTP = Integer.parseInt(otp_field.getText()); 
+        String enteredOTPText = otp_field.getText();
         String new_pw = String.valueOf(new_pw_field.getPassword()); 
         String re_pass = String.valueOf(confirm_new_pw_field.getPassword());
+        
+        // Check if the OTP field is empty
+        if (enteredOTPText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your OTP", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+            return;  // If the OTP field is empty, do not proceed to the next function
+        }
+        else if (!enteredOTPText.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "OTP must be an integer", "Invalid input",
+                    JOptionPane.WARNING_MESSAGE);
+            return;  
+        }
+        
+    
+        int enteredOTP = Integer.parseInt(enteredOTPText);
         
         // set expiration of OTP
         long current_time = System.currentTimeMillis();
@@ -374,20 +389,31 @@ public class forgotten_password extends javax.swing.JFrame {
         
         // Verify OTP
         if (enteredOTP == storedOTP  && time_diff <= expirationTime) {
-            if(!new_pw.equals(re_pass))
+            if (new_pw.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your new password", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+            else if (re_pass.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Add your confirmed new password", "Missing Value",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            else if(!new_pw.equals(re_pass))
             {
-                JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
+                JOptionPane.showMessageDialog(null, "Retype your confirmed new password again", "Invalid Input",
                         JOptionPane.ERROR_MESSAGE);
             }
             else {
                 String username = username_field.getText();
                 updatePassword(username, new_pw);
             }
-        } else if (time_diff > expirationTime) {
+        } 
+        else if (time_diff > expirationTime) {
             JOptionPane.showMessageDialog(this, "OTP has expired. Please request a new OTP.");
-        } else {
+        } 
+        else {
             JOptionPane.showMessageDialog(this, "Invalid OTP. Password update failed.");
         }
+
     }//GEN-LAST:event_update_buttonActionPerformed
 
     private void otp_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otp_fieldActionPerformed

@@ -1,6 +1,6 @@
 package hrpayrollsystem;
 
-import hrpayrollsystem.client_homepage;
+//import hrpayrollsystem.client_homepage;
 import com.itextpdf.text.Chunk;
 import java.io.FileNotFoundException;  
 import java.io.FileOutputStream;  
@@ -205,7 +205,7 @@ public class client_payroll extends javax.swing.JFrame {
             }
         });
 
-        generate_payroll_button.setText("generate");
+        generate_payroll_button.setText("Generate");
         generate_payroll_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generate_payroll_buttonActionPerformed(evt);
@@ -296,13 +296,13 @@ public class client_payroll extends javax.swing.JFrame {
                                 .addComponent(jLabel1))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(back_button)
-                                .addGap(80, 80, 80)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(generate_payroll_button)))))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

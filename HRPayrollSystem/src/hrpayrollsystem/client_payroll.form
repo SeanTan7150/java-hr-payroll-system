@@ -114,17 +114,17 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSeparator3" alignment="0" min="-2" pref="359" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jSeparator3" min="-2" pref="359" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Component id="back_button" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="generate_payroll_button" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="61" max="32767" attributes="0"/>
+              <EmptySpace pref="29" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -359,7 +359,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="generate_payroll_button">
       <Properties>
-        <Property name="text" type="java.lang.String" value="generate"/>
+        <Property name="text" type="java.lang.String" value="Generate"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generate_payroll_buttonActionPerformed"/>

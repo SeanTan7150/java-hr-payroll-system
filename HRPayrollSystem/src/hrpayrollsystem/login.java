@@ -176,15 +176,17 @@ public class login extends javax.swing.JFrame {
         String password = new String(password_field.getPassword());
         
         try {
-            if(uname.equals(""))
+            if(uname.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
             else if (!uname.matches("^[a-zA-Z]+$")) 
+            {
                 JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
                         JOptionPane.WARNING_MESSAGE);
-            else if(password.equals(""))
+            }
+            else if(password.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);

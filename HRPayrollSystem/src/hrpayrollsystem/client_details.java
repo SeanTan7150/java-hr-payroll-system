@@ -1,6 +1,6 @@
 package hrpayrollsystem;
 
-import hrpayrollsystem.client_homepage;
+//import hrpayrollsystem.client_homepage;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -91,7 +91,7 @@ public class client_details extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        jLabel1.setText("personal details");
+        jLabel1.setText("Personal Details");
 
         ic_passport_no_field.setEditable(false);
 
@@ -155,14 +155,12 @@ public class client_details extends javax.swing.JFrame {
                 .addGap(103, 103, 103)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(97, 97, 97)
                                 .addComponent(jLabel1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(back_button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(update_button)
                                 .addGap(40, 40, 40)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -190,7 +188,9 @@ public class client_details extends javax.swing.JFrame {
                             .addGap(46, 46, 46)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(employee_id_field)
-                                .addComponent(age_field, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(update_button)
+                                    .addComponent(age_field, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(149, 149, 149))
         );
         layout.setVerticalGroup(
@@ -262,23 +262,61 @@ public class client_details extends javax.swing.JFrame {
                 String db_firstName = existing_emp_data.getString("first_name");
                 String db_lastName = existing_emp_data.getString("last_name");
                 String db_email = existing_emp_data.getString("email");
-                int dbAge = existing_emp_data.getInt("age");
+                String dbAge = existing_emp_data.getString("age");
 
                 // Get user data from the form
                 String formFirstName = first_name_field.getText();
                 String formLastName = last_name_field.getText();
                 String formEmail = email_field.getText();
-                int formAge = Integer.parseInt(age_field.getText());
+                String formAge = age_field.getText();
 
                 // Compare the existing data with the form data
                 if (db_firstName.equals(formFirstName) && db_lastName.equals(formLastName)
-                    && db_email.equals(formEmail) && dbAge == formAge) {
+                    && db_email.equals(formEmail) && dbAge.equals(formAge)) {
                     JOptionPane.showMessageDialog(null, "No changes are made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
                 } 
+                else if(formFirstName.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if (!formFirstName.matches("^[a-zA-Z]+$")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if(formLastName.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if (!formLastName.matches("^[a-zA-Z]+$")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if(formEmail.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
                 else if (!formEmail.matches("^(.+)@(.+)$")) {
                     JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
                             JOptionPane.ERROR_MESSAGE);
                 }
+                else if(formAge.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if (!formAge.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
+                            JOptionPane.ERROR_MESSAGE);
+                } 
+                else if (formAge.length() > 2) {
+                    JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
+                            JOptionPane.WARNING_MESSAGE);
+                } 
                 else {
                     // Update the user data in the database
                     String updateQuery = "UPDATE employee SET first_name=?, last_name=?, email=?, age=? WHERE username=?";
@@ -286,7 +324,7 @@ public class client_details extends javax.swing.JFrame {
                     updateStm.setString(1, formFirstName);
                     updateStm.setString(2, formLastName);
                     updateStm.setString(3, formEmail);
-                    updateStm.setInt(4, formAge);
+                    updateStm.setString(4, formAge);
                     updateStm.setString(5, loggedInUsername);
 
                     int rowsAffected = updateStm.executeUpdate();

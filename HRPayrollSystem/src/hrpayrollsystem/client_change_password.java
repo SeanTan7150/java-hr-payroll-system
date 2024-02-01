@@ -1,6 +1,6 @@
 package hrpayrollsystem;
 
-import hrpayrollsystem.client_homepage;
+//import hrpayrollsystem.client_homepage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -152,13 +152,28 @@ public class client_change_password extends javax.swing.JFrame {
                 String re_pass = String.valueOf(confirm_new_pw_field.getPassword());
 
                 // Compare the existing data with the form data
-                if (!db_password.equals(old_pw) ) {
+                if(old_pw.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your old password", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if(new_pw.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your new password", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if(re_pass.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "Add your confirmed new password", "Missing Value",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else if (!db_password.equals(old_pw) ) {
                     JOptionPane.showMessageDialog(null, "Your old password is incorrect", "Incorrect", 
                             JOptionPane.INFORMATION_MESSAGE);
                 } 
                 else if(!new_pw.equals(re_pass))
                 {
-                    JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
+                    JOptionPane.showMessageDialog(null, "Retype your confirmed new password again", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                 }
                 else {

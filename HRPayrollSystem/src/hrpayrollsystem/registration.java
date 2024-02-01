@@ -1,7 +1,7 @@
 package hrpayrollsystem;
 
-import hrpayrollsystem.loginModel;
-import hrpayrollsystem.login;
+//import hrpayrollsystem.loginModel;
+//import hrpayrollsystem.login;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -244,31 +244,37 @@ public class registration extends javax.swing.JFrame {
         
         try {
             //check input validation
-            if(uname.equals(""))
+            if(uname.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
             else if (!uname.matches("^[a-zA-Z]+$")) 
+            {
                 JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
                         JOptionPane.WARNING_MESSAGE);
-            else if(fname.equals(""))
+            }
+            else if(fname.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
             else if (!fname.matches("^[a-zA-Z]+$")) 
+            {
                 JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
                         JOptionPane.WARNING_MESSAGE);
-            else if(lname.equals(""))
+            }
+            else if(lname.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
             else if (!lname.matches("^[a-zA-Z]+$")) 
+            {
                 JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
                         JOptionPane.WARNING_MESSAGE);
-            else if(ic_passport_no.equals(""))
+            }
+            else if(ic_passport_no.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
@@ -277,7 +283,7 @@ public class registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "IC/Passport number must be an integer", "Invalid Input", 
                         JOptionPane.ERROR_MESSAGE);
             }
-            else if(email.equals(""))
+            else if(email.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
@@ -286,7 +292,7 @@ public class registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
                         JOptionPane.ERROR_MESSAGE);
             }
-            else if(age.equals(""))
+            else if(age.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
@@ -299,12 +305,12 @@ public class registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
                         JOptionPane.WARNING_MESSAGE);
             } 
-            else if(pass.equals(""))
+            else if(pass.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
-            else if(re_pass.equals(""))
+            else if(re_pass.isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Add your confirmed password", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
