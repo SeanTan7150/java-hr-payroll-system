@@ -168,6 +168,11 @@ public class client_payroll extends javax.swing.JFrame {
         jLabel6.setText("Position");
 
         username_field.setEditable(false);
+        username_field.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                username_fieldActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Username");
 
@@ -212,6 +217,8 @@ public class client_payroll extends javax.swing.JFrame {
         gross_pay_field.setEditable(false);
 
         jLabel14.setText("Income Tax");
+
+        income_tax_field.setEditable(false);
 
         jLabel15.setText("Employee ID");
 
@@ -455,6 +462,10 @@ public class client_payroll extends javax.swing.JFrame {
     private void deduction_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deduction_fieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deduction_fieldActionPerformed
+
+    private void username_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_fieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_username_fieldActionPerformed
 
     /**
      * @param args the command line arguments

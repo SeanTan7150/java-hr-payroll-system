@@ -249,34 +249,64 @@ public class registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+            else if (!uname.matches("^[a-zA-Z]+$")) 
+                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
             else if(fname.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+            else if (!fname.matches("^[a-zA-Z]+$")) 
+                JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
             else if(lname.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+            else if (!lname.matches("^[a-zA-Z]+$")) 
+                JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
             else if(ic_passport_no.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
+            }
+            else if (!ic_passport_no.matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "IC/Passport number must be an integer", "Invalid Input", 
+                        JOptionPane.ERROR_MESSAGE);
             }
             else if(email.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+            else if (!email.matches("^(.+)@(.+)$")) {
+                JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
+                        JOptionPane.ERROR_MESSAGE);
+            }
             else if(age.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+            else if (!age.matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
+                        JOptionPane.ERROR_MESSAGE);
+            } 
+            else if (age.length() > 2) {
+                JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
+            } 
             else if(pass.equals(""))
             {
                 JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            else if(re_pass.equals(""))
+            {
+                JOptionPane.showMessageDialog(null, "Add your confirmed password", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
             else if(!pass.equals(re_pass))
@@ -286,21 +316,10 @@ public class registration extends javax.swing.JFrame {
             }
             else if(check_username(uname))
             {
-                JOptionPane.showMessageDialog(null, "This username already exist", "Invalid Input",
+                JOptionPane.showMessageDialog(null, "This username already exists", "Invalid Input",
                         JOptionPane.ERROR_MESSAGE);
             }
-            else if (!age.matches("\\d+")) {
-                JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
-            } 
-            else if (!ic_passport_no.matches("\\d+")) {
-                JOptionPane.showMessageDialog(null, "IC/Passport number must be an integer", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            else if (!email.matches("^(.+)@(.+)$")) {
-                JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
-            }
+
             else{
                 try 
                 {
