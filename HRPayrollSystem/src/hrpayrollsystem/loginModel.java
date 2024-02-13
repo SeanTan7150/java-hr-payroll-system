@@ -1,27 +1,46 @@
 package hrpayrollsystem;
 
-import java.io.IOException;
-//import java.io.FileInputStream; 
+//import java.io.IOException;
+import java.io.FileInputStream; 
 //import java.io.FileNotFoundException;
-//import java.io.FileOutputStream; 
+import java.io.FileOutputStream; 
 import java.io.ObjectInputStream; 
 import java.io.ObjectOutputStream; 
+//import javax.swing.text.GapContent;
 //import java.sql.SQLException;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 //import javax.swing.JOptionPane;
 
 public class loginModel implements java.io.Serializable{
-    private static final long serialVersionUID = 1L;
     private String username;
     private String password;
     
     public loginModel(String username, String password) {
-        this.username = username;
-        this.password = password;
-        System.out.println("start serialize");
+//        this.username = username;
+//        this.password = password;
+        this.username = "employee_username";
+        this.password = "employee_password";
         
+        try{
+            FileOutputStream fs = new FileOutputStream("loginModelFile.ser");
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(username);
+            os.writeObject(password);
+            os.close();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         
+        try{
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream("loginModelFile.ser"));
+            username = (String) is.readObject();
+            password = (String) is.readObject();
+            is.close();
+        } catch(Exception ex){
+        ex.printStackTrace();
+        }
+    
 //        try {  
 //            // Create an instance of the login page object
 //            loginModel loginModel = new loginModel(username, password);
@@ -50,19 +69,15 @@ public class loginModel implements java.io.Serializable{
         return password;
     }
     
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(username);
-        out.writeObject(password);
-//        System.out.println("successfully serialized");
-        out.close();
-        
-    }
+//    private void writeObject(ObjectOutputStream out) throws IOException {
+//        out.writeObject(username);
+//        out.writeObject(password);
+//        out.close();
+//    }
     
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        username = (String) in.readObject();
-        password = (String) in.readObject();
-//        System.out.println("successfully deserialized");
-        in.close();
-        
-    }
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+//        username = (String) in.readObject();
+//        password = (String) in.readObject();
+//        in.close();
+//    }
 }

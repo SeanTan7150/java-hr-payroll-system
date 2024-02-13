@@ -1,7 +1,5 @@
 package hrpayrollsystem;
 
-//import hrpayrollsystem.loginModel;
-//import hrpayrollsystem.login;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -53,31 +51,45 @@ public class registration extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        jLabel1.setText("REGISTRATION");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
+        jLabel1.setText("Registration");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel2.setText("First Name");
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel3.setText("Last Name");
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel4.setText("Age");
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel5.setText("IC / Passport Number");
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel6.setText("Password");
 
+        password_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         password_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 password_fieldActionPerformed(evt);
             }
         });
 
+        first_name_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         first_name_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 first_name_fieldActionPerformed(evt);
             }
         });
 
+        last_name_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+
+        ic_passport_no_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+
+        age_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+
+        register_button.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         register_button.setText("Register");
         register_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,24 +97,32 @@ public class registration extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel7.setText("Confirm Password");
 
+        confirm_password_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel8.setText("Email");
 
+        email_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         email_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 email_fieldActionPerformed(evt);
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel9.setText("Username");
 
+        username_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         username_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 username_fieldActionPerformed(evt);
             }
         });
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jButton1.setForeground(new java.awt.Color(102, 102, 255));
         jButton1.setText("Go to Login Page");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +131,7 @@ public class registration extends javax.swing.JFrame {
             }
         });
 
+        reset_button.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         reset_button.setText("Reset");
         reset_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,47 +144,47 @@ public class registration extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(159, 159, 159)
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-                            .addComponent(jButton1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(reset_button)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(age_field, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(ic_passport_no_field, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(last_name_field, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(first_name_field, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(username_field)
-                                .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(email_field, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(register_button)
-                                .addComponent(confirm_password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(83, 83, 83))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(age_field, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(ic_passport_no_field, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(last_name_field, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(first_name_field, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(username_field)
+                                        .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(email_field, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(confirm_password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(reset_button)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(register_button)
+                                        .addGap(92, 92, 92))))
+                            .addComponent(jButton1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(191, 191, 191)
+                        .addComponent(jLabel1)))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap(23, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -192,16 +213,14 @@ public class registration extends javax.swing.JFrame {
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(confirm_password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(confirm_password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(register_button)
                     .addComponent(reset_button))
-                .addGap(34, 34, 34))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -223,13 +242,14 @@ public class registration extends javax.swing.JFrame {
         String pass = String.valueOf(password_field.getPassword());
         String re_pass = String.valueOf(confirm_password_field.getPassword());
         String employeeID = null; 
+        String role = "employee";
         
-        //make the employee_id auto increse by 1 when register
+        //make the employee_id auto increase by 1 when register
         try {
         Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery("select max(employee_id) as max_emp_id from employee"); 
-        
+
             if (rs.next()) { //check if there are any results available in the rs 
                 int maxEmpId = rs.getInt("max_emp_id");
                 employeeID = String.valueOf(maxEmpId + 1); 
@@ -238,6 +258,7 @@ public class registration extends javax.swing.JFrame {
                 // Start with 1 if the table is empty
                 employeeID = "1"; 
             }
+            
         } catch (SQLException ex) {
             Logger.getLogger(registration.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -279,9 +300,9 @@ public class registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
-            else if (!ic_passport_no.matches("\\d+")) {
-                JOptionPane.showMessageDialog(null, "IC/Passport number must be an integer", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
+            else if (ic_passport_no.matches("^[a-zA-Z]*$")) {
+                JOptionPane.showMessageDialog(null, "IC should be number only, Passport number should be letters and number", "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
             }
             else if(email.isEmpty())
             {
@@ -330,7 +351,7 @@ public class registration extends javax.swing.JFrame {
                 try 
                 {
                     Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); 
-                    PreparedStatement stm = conn.prepareStatement("INSERT INTO employee(username, first_name, last_name, ic_passport_no, email, age, password, employee_id) VALUES (?,?,?,?,?,?,?,?)");  
+                    PreparedStatement stm = conn.prepareStatement("INSERT INTO employee(username, first_name, last_name, ic_passport_no, email, age, password, employee_id, role) VALUES (?,?,?,?,?,?,?,?,?)");  
                     stm.setString(1, uname);
                     stm.setString(2, fname);
                     stm.setString(3, lname);
@@ -339,6 +360,7 @@ public class registration extends javax.swing.JFrame {
                     stm.setString(6, age);
                     stm.setString(7, pass);
                     stm.setString(8, employeeID);
+                    stm.setString(9, role);
 
                     if(stm.executeUpdate() > 0)
                     {

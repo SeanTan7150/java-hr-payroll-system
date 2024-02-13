@@ -18,7 +18,19 @@ public class login extends javax.swing.JFrame {
     public login(loginModel login_model) {
         initComponents();
         this.login_model = login_model;
+        setUsernameAndPassword();
     }
+    
+    private void setUsernameAndPassword() {
+        String savedUsername = login_model.getUsername();
+        String savedPassword = login_model.getPassword();
+        
+        if (savedUsername != null && savedPassword != null) {
+            username_field.setText(savedUsername);
+            password_field.setText(savedPassword);
+        }
+    } 
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,32 +54,38 @@ public class login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        jLabel1.setText("LOGIN");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        jLabel1.setText("Login");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel2.setText("Username");
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel3.setText("Password");
 
+        username_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         username_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 username_fieldActionPerformed(evt);
             }
         });
 
-        login_button.setText("login");
+        login_button.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        login_button.setText("Login");
         login_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 login_buttonActionPerformed(evt);
             }
         });
 
+        password_field.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         password_field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 password_fieldActionPerformed(evt);
             }
         });
 
+        signup_button.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         signup_button.setForeground(new java.awt.Color(102, 102, 255));
         signup_button.setText("Don't have an account?");
         signup_button.addActionListener(new java.awt.event.ActionListener() {
@@ -76,6 +94,7 @@ public class login extends javax.swing.JFrame {
             }
         });
 
+        forgot_pw_button.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         forgot_pw_button.setForeground(new java.awt.Color(102, 102, 255));
         forgot_pw_button.setText("Forgot password?");
         forgot_pw_button.addActionListener(new java.awt.event.ActionListener() {
@@ -91,73 +110,66 @@ public class login extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
         jLabel4.setText("Welcome to Payroll System (PRS)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(114, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(189, 189, 189)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(username_field)
-                            .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(247, 247, 247)
-                        .addComponent(jCheckBox1)))
-                .addGap(82, 82, 82))
             .addGroup(layout.createSequentialGroup()
+                .addGap(79, 79, 79)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(signup_button)
-                                .addGap(18, 18, 18)
-                                .addComponent(forgot_pw_button))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(121, 121, 121)
-                                .addComponent(login_button, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(249, 249, 249)
+                        .addGap(184, 184, 184)
                         .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
-                        .addComponent(jLabel4)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(signup_button)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(forgot_pw_button))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(62, 62, 62)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jCheckBox1)
+                                        .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(216, 216, 216)
+                                .addComponent(login_button, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(62, 62, 62)
+                            .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(33, 33, 33)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
+                    .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(login_button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(signup_button)
                     .addComponent(forgot_pw_button))
-                .addGap(57, 57, 57))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -191,13 +203,27 @@ public class login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
                         JOptionPane.WARNING_MESSAGE);
             }
+
             else if (login_validation(uname, password)) {
                 JOptionPane.showMessageDialog(null,"login successfully", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
 
-                client_homepage c_home = new client_homepage(uname);
-                c_home.setVisible(true);
-                this.dispose();
+                String role = get_role(uname);
+                if ("employee".equals(role)) {
+                    client_homepage c_home = new client_homepage(uname);
+                    c_home.setVisible(true);
+                    this.dispose();
+                } 
+                else if ("admin".equals(role)){
+                    admin_homepage a_home = new admin_homepage(uname);
+                    a_home.setVisible(true);
+                    this.dispose();
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,"login failed due to the unknown user role", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+                
                 
 //                // Create an instance of the login page object
 //                login loginPage = new login(uname, password);
@@ -265,6 +291,21 @@ public class login extends javax.swing.JFrame {
         return isValid;
     }
     
+    private String get_role(String uname) throws SQLException 
+    {
+        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
+        PreparedStatement stm = conn.prepareStatement("SELECT role FROM employee WHERE username = ?");  
+        stm.setString(1, uname);
+        
+        ResultSet resultSet = stm.executeQuery();
+        String role = null;
+        if (resultSet.next()) {
+            role = resultSet.getString("role");
+        }
+        conn.close(); 
+        return role;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -310,24 +351,7 @@ public class login extends javax.swing.JFrame {
                 new login(login_model).setVisible(true);
             }
         });
-        
-//        try (FileInputStream fileIn = new FileInputStream("login_data.ser");
-//             ObjectInputStream input = new ObjectInputStream(fileIn)) {
-//            login previousLogin = (login) input.readObject();
-//            previousLogin.initializeLayout(); // Recreate the layout
-//            previousLogin.setVisible(true);
-//        } catch (IOException | ClassNotFoundException e) {
-//            // Handle if no saved data or errors
-//            e.printStackTrace();
-//        }
     }
-    
-//    private void initializeLayout() {
-//        // Recreate the layout here, similar to initComponents()
-//        layout = new javax.swing.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        // ... rest of layout setup
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton forgot_pw_button;

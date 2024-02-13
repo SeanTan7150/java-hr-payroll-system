@@ -1,7 +1,5 @@
 package hrpayrollsystem;
 
-//import hrpayrollsystem.loginModel;
-//import hrpayrollsystem.login;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -64,26 +62,29 @@ public class client_homepage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 35)); // NOI18N
         jLabel1.setText("Client Homepage");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 25)); // NOI18N
         jLabel2.setText("Username");
 
-        update_personal_details_button.setText("update personal details");
+        update_personal_details_button.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
+        update_personal_details_button.setText("Update personal details");
         update_personal_details_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 update_personal_details_buttonActionPerformed(evt);
             }
         });
 
-        check_payroll_button.setText("check payroll");
+        check_payroll_button.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
+        check_payroll_button.setText("Check payroll");
         check_payroll_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 check_payroll_buttonActionPerformed(evt);
             }
         });
 
+        logout_button.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
         logout_button.setForeground(new java.awt.Color(255, 51, 0));
         logout_button.setText("Logout");
         logout_button.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +93,8 @@ public class client_homepage extends javax.swing.JFrame {
             }
         });
 
-        change_password_button.setText("change password");
+        change_password_button.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
+        change_password_button.setText("Change password");
         change_password_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 change_password_buttonActionPerformed(evt);
@@ -104,27 +106,29 @@ public class client_homepage extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(198, 198, 198)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(logout_button)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(change_password_button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(check_payroll_button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(update_personal_details_button, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(230, Short.MAX_VALUE))
+                .addGap(120, 120, 120)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(logout_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addComponent(update_personal_details_button, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                    .addComponent(check_payroll_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(change_password_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(206, 206, 206))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+                .addGap(79, 79, 79)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addGap(50, 50, 50)
+                .addGap(47, 47, 47)
                 .addComponent(update_personal_details_button)
                 .addGap(18, 18, 18)
                 .addComponent(check_payroll_button)
