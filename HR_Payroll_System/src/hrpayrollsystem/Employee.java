@@ -1,6 +1,10 @@
 package hrpayrollsystem;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
+    private static final long serialVersionUID = 20120731125400L;
+    
     private String username;
     private String password;
     private String firstName;
