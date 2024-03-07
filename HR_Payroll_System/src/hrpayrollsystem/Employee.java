@@ -1,6 +1,9 @@
 package hrpayrollsystem;
 
-public class Employee {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Employee implements Serializable {
     private String username;
     private String password;
     private String firstName;
@@ -14,7 +17,7 @@ public class Employee {
     private double grossSalary;
     private double basicSalary;
     private double incomeTax;
-    private double deduction;
+    private ArrayList<Deduction> deductionList;
     
 //    public static final double EPF = 0.09; // get data from server maybe
 //    public static final double SOCSO = 0.005;
@@ -32,10 +35,11 @@ public class Employee {
         grossSalary = -1;
         basicSalary = -1;
         incomeTax = -1;
+        deductionList = new ArrayList<Deduction>();
     }
 
-    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId,
-            String jobPosition, String email, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax) {
+    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId, String jobPosition,
+            String email, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax, ArrayList<Deduction> deductionList) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -49,6 +53,7 @@ public class Employee {
         this.grossSalary = grossSalary;
         this.basicSalary = basicSalary;
         this.incomeTax = incomeTax;
+        this.deductionList = deductionList;
     }
     
     public String getUsername() {
@@ -149,5 +154,23 @@ public class Employee {
 
     public void setIncomeTax(double incomeTax) {
         this.incomeTax = incomeTax;
+    }
+  
+    public ArrayList<Deduction> getDeductionList() {
+        return deductionList;
+    }
+
+    public void setDeductionList(ArrayList<Deduction> deductionList) {
+        this.deductionList = deductionList;
+    }
+    
+    public double getDeduction(int month) {
+        for(Deduction deduction : deductionList) {
+            if (deduction.getMonth() == month) {
+                return deduction.getDeductionValue();
+            }
+        }
+        
+        return -1;
     }
 }
