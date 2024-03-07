@@ -7,10 +7,6 @@ import java.rmi.RemoteException;
 
 public class Client {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        //Interface hrInterface = (Interface)Naming.lookup("rmi://localhost:1040/HrServer");
-        Interface hrInterface = null;
-
-        AdminPage adminPage = new AdminPage(hrInterface);
-        adminPage.setVisible(true);
+        Interface hrInterface = (Interface)Naming.lookup("rmi://localhost:1040/HrServer");
     }
 }

@@ -155,7 +155,7 @@ public class Employee implements Serializable {
     public void setIncomeTax(double incomeTax) {
         this.incomeTax = incomeTax;
     }
-
+  
     public ArrayList<Deduction> getDeductionList() {
         return deductionList;
     }
