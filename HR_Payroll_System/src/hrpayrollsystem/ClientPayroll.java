@@ -21,16 +21,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-public class client_payroll extends javax.swing.JFrame {
-
+public class ClientPayroll extends javax.swing.JFrame {
+    private Interface hrInterface;
     private final String loggedInUsername;
     
     /**
      * Creates new form client_payroll
      */
-    public client_payroll(String loggedInUsername) {
+    public ClientPayroll(Interface hrInterface, String loggedInUsername) {
         initComponents(); 
-        
+        this.hrInterface = hrInterface;
         this.loggedInUsername = loggedInUsername;
         try {
             displayUserData(loggedInUsername);
@@ -433,7 +433,7 @@ public class client_payroll extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void back_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_buttonActionPerformed
-        client_homepage c_homepage = new client_homepage(loggedInUsername);
+        ClientHomepage c_homepage = new ClientHomepage(hrInterface, loggedInUsername);
         c_homepage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_back_buttonActionPerformed
@@ -517,11 +517,11 @@ public class client_payroll extends javax.swing.JFrame {
     }//GEN-LAST:event_generate_payroll_buttonActionPerformed
 
     private void deduction_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deduction_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_deduction_fieldActionPerformed
 
     private void username_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void search_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_buttonActionPerformed
@@ -591,7 +591,7 @@ public class client_payroll extends javax.swing.JFrame {
 
             conn.close();
         }catch (SQLException ex) {
-            Logger.getLogger(client_payroll.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientPayroll.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }        
     }//GEN-LAST:event_search_buttonActionPerformed
@@ -599,37 +599,38 @@ public class client_payroll extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(client_payroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(client_payroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(client_payroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(client_payroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new client_payroll("loggedInUsername").setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ClientPayroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ClientPayroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ClientPayroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ClientPayroll.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ClientPayroll("loggedInUsername").setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField allowance_field;

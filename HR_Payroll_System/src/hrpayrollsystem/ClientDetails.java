@@ -9,16 +9,16 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class client_details extends javax.swing.JFrame {
-
+public class ClientDetails extends javax.swing.JFrame {
+    private Interface hrInterface;
     private final String loggedInUsername;
 
     /**
      * Creates new form client_details
      */
-    public client_details(String loggedInUsername) {
+    public ClientDetails(Interface hrInterface, String loggedInUsername) {
         initComponents();
-        
+        this.hrInterface = hrInterface;
         this.loggedInUsername = loggedInUsername;
         try {
             displayUserData(loggedInUsername);
@@ -253,11 +253,11 @@ public class client_details extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void email_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_email_fieldActionPerformed
 
     private void first_name_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_first_name_fieldActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_first_name_fieldActionPerformed
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
@@ -354,17 +354,17 @@ public class client_details extends javax.swing.JFrame {
 
             conn.close();
         } catch (SQLException | NumberFormatException ex) {
-            Logger.getLogger(client_details.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientDetails.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error updating data", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_update_buttonActionPerformed
 
     private void age_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_age_fieldActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_age_fieldActionPerformed
 
     private void back_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_buttonActionPerformed
-        client_homepage c_homepage = new client_homepage(loggedInUsername);
+        ClientHomepage c_homepage = new ClientHomepage(hrInterface, loggedInUsername);
         c_homepage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_back_buttonActionPerformed
@@ -372,37 +372,38 @@ public class client_details extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(client_details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(client_details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(client_details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(client_details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new client_details("loggedInUsername").setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ClientDetails("loggedInUsername").setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField age_field;

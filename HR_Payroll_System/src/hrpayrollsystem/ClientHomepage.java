@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class client_homepage extends javax.swing.JFrame {
-
+public class ClientHomepage extends javax.swing.JFrame {
+    private Interface hrInterface;
     private String loggedInUsername;
 
     /**
      * Creates new form client_homepage
      */
-    public client_homepage(String loggedInUsername) {
+    public ClientHomepage(Interface hrInterface, String loggedInUsername) {
         initComponents();
         this.loggedInUsername = loggedInUsername;
         
@@ -143,13 +143,13 @@ public class client_homepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void update_personal_details_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_personal_details_buttonActionPerformed
-        client_details c_details = new client_details(loggedInUsername);
+        ClientDetails c_details = new ClientDetails(hrInterface, loggedInUsername);
         c_details.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_update_personal_details_buttonActionPerformed
 
     private void check_payroll_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_payroll_buttonActionPerformed
-        client_payroll c_payroll = new client_payroll(loggedInUsername);
+        ClientPayroll c_payroll = new ClientPayroll(hrInterface, loggedInUsername);
         c_payroll.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_check_payroll_buttonActionPerformed
@@ -159,14 +159,14 @@ public class client_homepage extends javax.swing.JFrame {
         if (dialog == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(null,"Logout successfully", "Success",
                 JOptionPane.INFORMATION_MESSAGE);
-            loginModel login_model = new loginModel("username", "password");
-            new login(login_model).setVisible(true);
+            LoginModel login_model = new LoginModel("username", "password");
+            new Login(hrInterface, login_model).setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_logout_buttonActionPerformed
 
     private void change_password_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_password_buttonActionPerformed
-        client_change_password change_pw = new client_change_password(loggedInUsername);
+        ClientChangePassword change_pw = new ClientChangePassword(hrInterface, loggedInUsername);
         change_pw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_change_password_buttonActionPerformed
@@ -174,37 +174,38 @@ public class client_homepage extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(client_homepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(client_homepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(client_homepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(client_homepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new client_homepage("loggedInUsername").setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ClientHomepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ClientHomepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ClientHomepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ClientHomepage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ClientHomepage("loggedInUsername").setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton change_password_button;
