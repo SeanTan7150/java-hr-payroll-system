@@ -10,13 +10,15 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class registration extends javax.swing.JFrame {
-
+public class Registration extends javax.swing.JFrame {
+    private Interface hrInterface;
+    
     /**
      * Creates new form registration
      */
-    public registration() {
+    public Registration(Interface hrInterface) {
         initComponents();
+        this.hrInterface = hrInterface;
     }
 
     /**
@@ -260,7 +262,7 @@ public class registration extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(registration.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         try {
@@ -367,8 +369,8 @@ public class registration extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "New user is successfully added", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
                         
-                        loginModel login_model = new loginModel("username", "password");
-                        new login(login_model).setVisible(true);
+                        LoginModel login_model = new LoginModel("username", "password");
+                        new Login(hrInterface, login_model).setVisible(true);
                         this.dispose();
                     }
                     else 
@@ -378,11 +380,11 @@ public class registration extends javax.swing.JFrame {
                     }
                     
                 } catch (SQLException ex) {
-                    Logger.getLogger(registration.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(registration.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_register_buttonActionPerformed
 
@@ -395,8 +397,8 @@ public class registration extends javax.swing.JFrame {
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        loginModel login_model = new loginModel("username", "password");
-        new login(login_model).setVisible(true);
+        LoginModel login_model = new LoginModel("username", "password");
+        new Login(hrInterface, login_model).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -433,7 +435,7 @@ public class registration extends javax.swing.JFrame {
                 checkUser = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(registration.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
          return checkUser;
     }
@@ -441,37 +443,38 @@ public class registration extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new registration().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Registration().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField age_field;

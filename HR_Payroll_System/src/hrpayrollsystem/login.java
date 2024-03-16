@@ -9,21 +9,23 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
         
-public class login extends javax.swing.JFrame { 
-    private loginModel login_model;
+public class Login extends javax.swing.JFrame { 
+    private Interface hrInterface;
+    private LoginModel loginModel;
     
     /**
      * Creates new form login
      */
-    public login(loginModel login_model) {
+    public Login(Interface hrInterface, LoginModel login_model) {
         initComponents();
-        this.login_model = login_model;
+        this.hrInterface = hrInterface;
+        this.loginModel = login_model;
         setUsernameAndPassword();
     }
     
     private void setUsernameAndPassword() {
-        String savedUsername = login_model.getUsername();
-        String savedPassword = login_model.getPassword();
+        String savedUsername = loginModel.getUsername();
+        String savedPassword = loginModel.getPassword();
         
         if (savedUsername != null && savedPassword != null) {
             username_field.setText(savedUsername);
@@ -210,13 +212,13 @@ public class login extends javax.swing.JFrame {
 
                 String role = get_role(uname);
                 if ("employee".equals(role)) {
-                    client_homepage c_home = new client_homepage(uname);
+                    ClientHomepage c_home = new ClientHomepage(hrInterface, uname);
                     c_home.setVisible(true);
                     this.dispose();
                 } 
                 else if ("admin".equals(role)){
-                    admin_homepage a_home = new admin_homepage(uname);
-                    a_home.setVisible(true);
+                    AdminPage adminPage = new AdminPage(hrInterface);
+                    adminPage.setVisible(true);
                     this.dispose();
                 }
                 else {
@@ -242,8 +244,13 @@ public class login extends javax.swing.JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } 
+//        catch (FileNotFoundException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
 //        catch (FileNotFoundException ex) {
 //            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
 //        } catch (IOException ex) {
@@ -255,7 +262,7 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_login_buttonActionPerformed
 
     private void signup_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_buttonActionPerformed
-        registration reg = new registration();
+        Registration reg = new Registration(hrInterface);
         reg.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_signup_buttonActionPerformed
@@ -271,7 +278,7 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void forgot_pw_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgot_pw_buttonActionPerformed
-        forgotten_password forgotten_pw = new forgotten_password();
+        ForgottenPassword forgotten_pw = new ForgottenPassword(hrInterface);
         forgotten_pw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_forgot_pw_buttonActionPerformed
@@ -309,49 +316,49 @@ public class login extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        
-//        try (FileInputStream fileIn = new FileInputStream("login_data.ser");
-//            ObjectInputStream input = new ObjectInputStream(fileIn)) {
-//           login previousLogin = (login) input.readObject();
-//           // Use the deserialized login object's data if needed
-//           input.close();
-//        } catch (IOException | ClassNotFoundException e) {
-//            // Handle if no saved data or errors
-//            e.printStackTrace();
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
-        
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                loginModel login_model = new loginModel("username", "password");
-                new login(login_model).setVisible(true);
-            }
-        });
-    }
+//        
+////        try (FileInputStream fileIn = new FileInputStream("login_data.ser");
+////            ObjectInputStream input = new ObjectInputStream(fileIn)) {
+////           login previousLogin = (login) input.readObject();
+////           // Use the deserialized login object's data if needed
+////           input.close();
+////        } catch (IOException | ClassNotFoundException e) {
+////            // Handle if no saved data or errors
+////            e.printStackTrace();
+////        }
+//        
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                LoginModel login_model = new LoginModel("username", "password");
+//                new Login(hrInterface, login_model).setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton forgot_pw_button;

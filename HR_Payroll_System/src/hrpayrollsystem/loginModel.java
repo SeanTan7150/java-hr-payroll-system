@@ -12,16 +12,24 @@ import java.io.ObjectOutputStream;
 //import java.util.logging.Logger;
 //import javax.swing.JOptionPane;
 
-public class loginModel implements java.io.Serializable{
+public class LoginModel implements java.io.Serializable{
     private String username;
     private String password;
     
-    public loginModel(String username, String password) {
+    public LoginModel(String username, String password) {
 //        this.username = username;
 //        this.password = password;
         this.username = "employee_username";
         this.password = "employee_password";
-        
+
+        try{
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream("loginModelFile.ser"));
+            username = (String) is.readObject();
+            password = (String) is.readObject();
+            is.close();
+        } catch(Exception ex){
+        ex.printStackTrace();
+        }
         try{
             FileOutputStream fs = new FileOutputStream("loginModelFile.ser");
             ObjectOutputStream os = new ObjectOutputStream(fs);
@@ -31,15 +39,7 @@ public class loginModel implements java.io.Serializable{
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        
-        try{
-            ObjectInputStream is = new ObjectInputStream(new FileInputStream("loginModelFile.ser"));
-            username = (String) is.readObject();
-            password = (String) is.readObject();
-            is.close();
-        } catch(Exception ex){
-        ex.printStackTrace();
-        }
+
     
 //        try {  
 //            // Create an instance of the login page object
