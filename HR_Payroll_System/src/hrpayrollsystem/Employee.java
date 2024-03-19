@@ -1,11 +1,12 @@
 package hrpayrollsystem;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Employee implements Serializable {
     private static final long serialVersionUID = 20120731125400L;
     
-    private String username;
+    private final String username;
     private String password;
     private String firstName;
     private String lastName;
@@ -13,17 +14,18 @@ public class Employee implements Serializable {
     private String employeeId;
     private String jobPosition;
     private String email;
+    private int age;
     private double allowance;
     private double netSalary;
     private double grossSalary;
     private double basicSalary;
     private double incomeTax;
-    private double deduction;
+    private ArrayList<Deduction> deductionList;
     
 //    public static final double EPF = 0.09; // get data from server maybe
 //    public static final double SOCSO = 0.005;
     
-    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId, String email) {
+    public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId, String email, int age) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -31,15 +33,17 @@ public class Employee implements Serializable {
         this.icNumber = icNumber;
         this.employeeId = employeeId;
         this.email = email;
+        this.age = age;
         allowance = -1;
         netSalary = -1;
         grossSalary = -1;
         basicSalary = -1;
         incomeTax = -1;
+        deductionList = new ArrayList<>();
     }
 
     public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId,
-            String jobPosition, String email, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax) {
+            String jobPosition, String email, int age, double allowance, double netSalary, double grossSalary, double basicSalary, double incomeTax, ArrayList<Deduction> deductionList) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -48,11 +52,13 @@ public class Employee implements Serializable {
         this.employeeId = employeeId;
         this.jobPosition = jobPosition;
         this.email = email;
+        this.age = age;
         this.allowance = allowance;
         this.netSalary = netSalary;
         this.grossSalary = grossSalary;
         this.basicSalary = basicSalary;
         this.incomeTax = incomeTax;
+        this.deductionList = deductionList;
     }
     
     public String getUsername() {
@@ -114,6 +120,14 @@ public class Employee implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
 
     public double getAllowance() {
         return allowance;
@@ -153,5 +167,18 @@ public class Employee implements Serializable {
 
     public void setIncomeTax(double incomeTax) {
         this.incomeTax = incomeTax;
+    }
+    
+    public void setDeductionList(ArrayList<Deduction> deductionList) {
+        this.deductionList = deductionList;
+    }
+    
+    public double getDeduction(int month) {
+        for(Deduction deduction : deductionList) {
+            if (deduction.getMonth() == month) {
+                return deduction.getDeductionValue();
+            }
+        }
+        return -1;
     }
 }
