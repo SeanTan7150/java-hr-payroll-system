@@ -179,6 +179,6 @@ public class Employee implements Serializable {
                 return deduction.getDeductionValue();
             }
         }
-        return -1;
+        return 0;
     }
 }

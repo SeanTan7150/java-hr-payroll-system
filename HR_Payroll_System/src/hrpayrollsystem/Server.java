@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -75,6 +76,35 @@ public class Server extends UnicastRemoteObject implements Interface {
                     pstm.setString(10, "developer");
                     pstm.setString(11, newEmployee.getEmployeeId());
                     pstm.setString(12, "employee");
+                    pstm.execute();
+                    
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    public void updateEmployee(String username, String firstName, String lastName, String email, int age) throws RemoteException {
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS", "root", "root")) {
+                String sql = "UPDATE employee SET "
+                        + "FIRST_NAME = ?, "
+                        + "LAST_NAME = ?, "
+                        + "EMAIL = ?, "
+                        + "AGE = ? "
+                        + "WHERE USERNAME = ?";
+                
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, firstName);
+                    pstm.setString(2, lastName);
+                    pstm.setString(3, email);
+                    pstm.setInt(4, age);
+                    pstm.setString(5, username);
                     pstm.execute();
                     
                     conn.commit();
@@ -214,6 +244,258 @@ public class Server extends UnicastRemoteObject implements Interface {
         return loggedInUser;
     }
     
+    @Override
+    public ArrayList<Employee> getAllEmployeeBasicDetails() throws RemoteException {
+        ArrayList<Employee> employees = new ArrayList<>();
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+                String sql = "SELECT * FROM employee WHERE ROLE = ?";
+                
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, "employee");
+                    
+                    ResultSet rs = pstm.executeQuery();
+                    while (rs.next()) {
+                        Employee employee = new Employee(
+                                rs.getString("USERNAME"),
+                                rs.getString("PASSWORD"), 
+                                rs.getString("FIRST_NAME"), 
+                                rs.getString("LAST_NAME"), 
+                                rs.getString("IC_PASSPORT_NO"), 
+                                rs.getString("EMPLOYEE_ID"), 
+                                rs.getString("EMAIL"), 
+                                rs.getInt("AGE")
+                        );
+                        employees.add(employee);
+                    }
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return employees;
+    }
+    
+    @Override
+    public Employee getEmployeeFullDetails(String username, int month) throws RemoteException {
+        Employee loggedInUser = null;
+        ArrayList<Deduction> deductionList = new ArrayList<>();
+        double allowance = 0;
+        double basicSalary = 0;
+        double grossSalary = 0;
+        double incomeTax = 0;
+        double netSalary = 0;
+
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+                String sql = "SELECT * FROM employee WHERE USERNAME = ?";
+                
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, username);
+                    
+                    ResultSet rs = pstm.executeQuery();
+                    if (rs.next()) {
+                        allowance = rs.getDouble("ALLOWANCE");
+                        basicSalary = rs.getDouble("BASIC_SALARY");
+                        grossSalary = basicSalary + allowance;
+                        incomeTax = getIncomeTax(basicSalary);
+                        loggedInUser = new Employee(
+                                rs.getString("USERNAME"),
+                                rs.getString("PASSWORD"), 
+                                rs.getString("FIRST_NAME"), 
+                                rs.getString("LAST_NAME"), 
+                                rs.getString("IC_PASSPORT_NO"), 
+                                rs.getString("EMPLOYEE_ID"), 
+                                rs.getString("POSITION"),
+                                rs.getString("EMAIL"), 
+                                rs.getInt("AGE"),
+                                allowance,
+                                0,
+                                grossSalary,
+                                basicSalary,
+                                incomeTax,
+                                deductionList
+                        );
+                    }
+                    
+                    if (loggedInUser != null) {
+                        loggedInUser.setDeductionList(getDeductionList(username));
+                        netSalary = grossSalary - loggedInUser.getDeduction(month) - incomeTax;
+                        loggedInUser.setNetSalary(netSalary);
+                    }
+                    
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loggedInUser;
+    }
+
+    @Override
+    public ArrayList<Employee> getAllEmployeeFullDetails(int month) throws RemoteException {
+        ArrayList<Employee> employees = new ArrayList<>();
+        ArrayList<Deduction> deductionList = new ArrayList<>();
+        String username = null;
+        double allowance = 0;
+        double basicSalary = 0;
+        double grossSalary = 0;
+        double incomeTax = 0;
+        double netSalary = 0;
+
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+                String sql = "SELECT * FROM employee WHERE ROLE = ?";
+                
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, "employee");
+                    
+                    ResultSet rs = pstm.executeQuery();
+                    while (rs.next()) {
+                        username = rs.getString("USERNAME");
+                        allowance = rs.getDouble("ALLOWANCE");
+                        basicSalary = rs.getDouble("BASIC_SALARY");
+                        grossSalary = basicSalary + allowance;
+                        incomeTax = getIncomeTax(basicSalary);
+                        Employee employee = new Employee(
+                                username,
+                                rs.getString("PASSWORD"), 
+                                rs.getString("FIRST_NAME"), 
+                                rs.getString("LAST_NAME"), 
+                                rs.getString("IC_PASSPORT_NO"), 
+                                rs.getString("EMPLOYEE_ID"), 
+                                rs.getString("POSITION"),
+                                rs.getString("EMAIL"), 
+                                rs.getInt("AGE"),
+                                allowance,
+                                0,
+                                grossSalary,
+                                basicSalary,
+                                incomeTax,
+                                deductionList
+                        );
+                        employees.add(employee);
+                    }
+                    
+                    for (Employee employee : employees) {
+                        employee.setDeductionList(getDeductionList(employee.getUsername()));
+                        netSalary = employee.getGrossSalary() - employee.getDeduction(month) - employee.getIncomeTax();
+                        employee.setNetSalary(netSalary);
+                    }
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return employees;
+    }
+    
+    @Override
+    public String getPayrollDocument(String username, int month, String filePath) throws RemoteException, FileNotFoundException, DocumentException {
+        try {
+            Employee employee = getEmployeeFullDetails(username, month);
+            if (employee == null) {
+                return "Employee does not exist";
+            }
+            else {
+                Document doc = new Document();
+                PdfWriter.getInstance(doc, new FileOutputStream(filePath + username + ".pdf"));
+                doc.open();
+
+                Paragraph companyName = new Paragraph("BHEL Company", FontFactory.getFont(FontFactory.TIMES_BOLD, 15));
+                doc.add(companyName);
+                doc.add(new Chunk(new LineSeparator()));
+
+                Paragraph title = new Paragraph("Employee Payroll Statement", FontFactory.getFont(FontFactory.TIMES_BOLD, 18));
+                title.setAlignment(Element.ALIGN_CENTER);
+                doc.add(title);
+
+                Paragraph date = (new Paragraph("Generated on " + new Date(new java.util.Date().getTime()).toString(), FontFactory.getFont(FontFactory.TIMES_ITALIC, 10)));
+                date.setAlignment(Element.ALIGN_RIGHT);
+                doc.add(date);
+
+                double basicSalary = employee.getBasicSalary();
+                double epf = basicSalary * 0.09;
+                double socso = basicSalary * 0.005;
+                double eis = basicSalary * 0.002;
+
+                Paragraph personalDetails = new Paragraph(
+                        "Personal Details:\n" 
+                        + "username: " + employee.getUsername() + "\n"
+                        + "IC/Passport No: " + employee.getIcNumber() + "\n"
+                        + "Employee ID: " + employee.getEmployeeId() + "\n"
+                        + "Position: " + employee.getJobPosition() + "\n"
+
+                        + "\nPayment:\n"
+                        + "Month: " + month + "\n"
+                        + "Basic Salary: RM " + basicSalary + "\n"
+                        + "Allowance: RM " + employee.getAllowance() + "\n"
+                        + "Gross Pay: RM " + employee.getGrossSalary()+ "\n"
+                        + "Deductions: RM " + employee.getDeduction(month)+ "\n"
+                        + "Income Tax: RM " + employee.getIncomeTax()+ "\n"
+                        + "EPF: RM " + epf + "\n"
+                        + "SOCSO: RM " + socso + "\n"
+                        + "EIS: RM " + eis + "\n"
+                );
+                Chunk netSalaryChunk = new Chunk("Net Salary: RM " + employee.getNetSalary());
+                netSalaryChunk.setUnderline(1, -2);
+                personalDetails.add(netSalaryChunk);
+                personalDetails.setAlignment(Element.ALIGN_CENTER);
+                doc.add(personalDetails);
+                doc.close();
+            }
+        } catch (DocumentException | FileNotFoundException ex) {
+            return "Error generating PDF: " + ex.getMessage();
+        }
+        return "Payroll generated successfully!";
+    }
+    
+    @Override
+    public HashMap<String, Double> getEmployeeTotals(int month) throws RemoteException {
+        double totalBasicSalary = 0;
+        double totalAllowance = 0;
+        double totalEPF = 0;
+        double totalSOCSO = 0;
+        double totalDeduction = 0;
+        double totalNetSalary = 0;
+        
+        double basicSalary = 0;
+        double epf = 0;
+        double socso = 0;
+        
+        ArrayList<Employee> employees = getAllEmployeeFullDetails(month);
+        for (Employee employee : employees) {
+            basicSalary = employee.getBasicSalary();
+            epf = basicSalary * 0.09;
+            socso = basicSalary * 0.005;
+            
+            totalBasicSalary += basicSalary;
+            totalAllowance += employee.getAllowance();
+            totalEPF += epf;
+            totalSOCSO += socso;
+            totalDeduction += employee.getDeduction(month);
+            totalNetSalary += employee.getNetSalary();
+        }
+        
+        HashMap<String, Double> totals = new HashMap<>();
+        totals.put("BasicSalary", totalBasicSalary);
+        totals.put("Allowance", totalAllowance);
+        totals.put("EPF", totalEPF);
+        totals.put("SOCSO", totalSOCSO);
+        totals.put("Deduction", totalDeduction);
+        totals.put("NetSalary", totalNetSalary);
+        return totals;
+    }
+    
     private ArrayList<Deduction> getDeductionList(String username) throws RemoteException {
         ArrayList<Deduction> deductionList = new ArrayList<>();
         try {
@@ -238,58 +520,6 @@ public class Server extends UnicastRemoteObject implements Interface {
         return deductionList;
     }
     
-    @Override
-    public Employee getEmployeeFullDetails(String username) throws RemoteException {
-        Employee loggedInUser = null;
-        ArrayList<Deduction> deductionList = new ArrayList<>();
-        
-        try {
-            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
-                String sql = "SELECT * FROM employee WHERE USERNAME = ?";
-                
-                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-                    pstm.setString(1, username);
-                    
-                    ResultSet rs = pstm.executeQuery();
-                    if (rs.next()) {
-                        double allowance = rs.getDouble("ALLOWANCE");
-                        double basicSalary = rs.getDouble("BASIC_SALARY");
-                        double grossSalary = basicSalary + allowance;
-                        double incomeTax = getIncomeTax(basicSalary);
-                        
-                        loggedInUser = new Employee(
-                                rs.getString("USERNAME"),
-                                rs.getString("PASSWORD"), 
-                                rs.getString("FIRST_NAME"), 
-                                rs.getString("LAST_NAME"), 
-                                rs.getString("IC_PASSPORT_NO"), 
-                                rs.getString("EMPLOYEE_ID"), 
-                                rs.getString("POSITION"),
-                                rs.getString("EMAIL"), 
-                                rs.getInt("AGE"),
-                                allowance,
-                                0,
-                                grossSalary,
-                                basicSalary,
-                                incomeTax,
-                                deductionList
-                        );
-                    }
-                    
-                    if (loggedInUser != null) {
-                        loggedInUser.setDeductionList(getDeductionList(username));
-                    }
-                    conn.commit();
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return loggedInUser;
-    }
-
     private double getIncomeTax(double basicSalary) throws RemoteException {
         if (basicSalary < 5000) {
             return 0;
@@ -301,61 +531,6 @@ public class Server extends UnicastRemoteObject implements Interface {
             return basicSalary * 0.03;
         }
         return basicSalary * 0.08;
-    }
-    
-    @Override
-    public String getPayrollDocument(String username, int month, String filePath) throws RemoteException, FileNotFoundException, DocumentException {
-        try {
-            Employee employee = getEmployeeFullDetails(username);
-            Document doc = new Document();
-            PdfWriter.getInstance(doc, new FileOutputStream(filePath + username + ".pdf"));
-            doc.open();
-
-            Paragraph companyName = new Paragraph("BHEL Company", FontFactory.getFont(FontFactory.TIMES_BOLD, 15));
-            doc.add(companyName);
-            doc.add(new Chunk(new LineSeparator()));
-
-            Paragraph title = new Paragraph("Employee Payroll Statement", FontFactory.getFont(FontFactory.TIMES_BOLD, 18));
-            title.setAlignment(Element.ALIGN_CENTER);
-            doc.add(title);
-
-            Paragraph date = (new Paragraph("Generated on " + new Date(new java.util.Date().getTime()).toString(), FontFactory.getFont(FontFactory.TIMES_ITALIC, 10)));
-            date.setAlignment(Element.ALIGN_RIGHT);
-            doc.add(date);
-
-            double basicSalary = employee.getBasicSalary();
-            double epf = basicSalary * 0.09;
-            double socso = basicSalary * 0.005;
-            double eis = basicSalary * 0.002;
-
-            Paragraph personalDetails = new Paragraph(
-                    "Personal Details:\n" 
-                    + "username: " + employee.getUsername() + "\n"
-                    + "IC/Passport No: " + employee.getIcNumber() + "\n"
-                    + "Employee ID: " + employee.getEmployeeId() + "\n"
-                    + "Position: " + employee.getJobPosition() + "\n"
-
-                    + "\nPayment:\n"
-                    + "Month: " + month + "\n"
-                    + "Basic Salary: RM " + basicSalary + "\n"
-                    + "Allowance: RM " + employee.getAllowance() + "\n"
-                    + "Gross Pay: RM " + employee.getGrossSalary()+ "\n"
-                    + "Deductions: RM " + employee.getDeduction(month)+ "\n"
-                    + "Income Tax: RM " + employee.getIncomeTax()+ "\n"
-                    + "EPF: RM " + epf + "\n"
-                    + "SOCSO: RM " + socso + "\n"
-                    + "EIS: RM " + eis + "\n"
-            );
-            Chunk netSalaryChunk = new Chunk("Net Salary: RM " + employee.getNetSalary());
-            netSalaryChunk.setUnderline(1, -2);
-            personalDetails.add(netSalaryChunk);
-            personalDetails.setAlignment(Element.ALIGN_CENTER);
-            doc.add(personalDetails);
-            doc.close();
-        } catch (DocumentException | FileNotFoundException ex) {
-            return "Error generating PDF: " + ex.getMessage();
-        }
-        return "Payroll generated successfully!";
     }
     
     // VALIDATION
@@ -482,6 +657,42 @@ public class Server extends UnicastRemoteObject implements Interface {
         return new ValidationResult(true, "", "");
     }
     
+    private ValidationResult checkLogin(String username, String password) throws RemoteException {
+        boolean login = false;
+        String role = null;
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+                String sql = "SELECT * FROM employee WHERE USERNAME = ? and PASSWORD = ?";
+                
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, username);
+                    pstm.setString(2, password);
+                    
+                    try (ResultSet rs = pstm.executeQuery()) {
+                        login = rs.next();
+                        
+                        if (login) {
+                            role = rs.getString("ROLE");
+                        }
+                    }
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (!login) {
+            return new ValidationResult(false, "login failed", "Error");
+        }
+        else if (!"employee".equals(role) && !"admin".equals(role)) {
+            return new ValidationResult(false, "login failed due to the unknown user role", "Error");
+        }
+        return new ValidationResult(true, "", "");
+    }
+    
     // Return true if input fields are valid
     // Else, return false, error message, and error type
     @Override
@@ -523,42 +734,6 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         exe.shutdown();
         return isRegistrationValid;
-    }
-    
-    private ValidationResult checkLogin(String username, String password) throws RemoteException {
-        boolean login = false;
-        String role = null;
-        try {
-            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
-                String sql = "SELECT * FROM employee WHERE USERNAME = ? and PASSWORD = ?";
-                
-                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-                    pstm.setString(1, username);
-                    pstm.setString(2, password);
-                    
-                    try (ResultSet rs = pstm.executeQuery()) {
-                        login = rs.next();
-                        
-                        if (login) {
-                            role = rs.getString("ROLE");
-                        }
-                    }
-                    conn.commit();
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if (!login) {
-            return new ValidationResult(false, "login failed", "Error");
-        }
-        else if (!"employee".equals(role) && !"admin".equals(role)) {
-            return new ValidationResult(false, "login failed due to the unknown user role", "Error");
-        }
-        return new ValidationResult(true, "", "");
     }
     
     // Return true if input fields are valid and login success

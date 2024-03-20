@@ -17,11 +17,11 @@ public class Client {
 //        hrInterface.insertEmployee(newEmployee);
 //        System.out.println(hrInterface.validateRegistration("jojo", "Jonathan", "Joestar", "021013141033", "jojo@gmail.com", "80", "jojo", "").isValid());
 //        System.out.println(hrInterface.validateRegistration("jojo", "Jonathan", "Joestar", "021013141033", "jojo@gmail.com", "80", "jojo", "").getErrorMessage());
-        try {
-            System.out.println(hrInterface.getPayrollDocument("jojo", 10, "C:\\Users\\xiuha\\OneDrive\\Desktop\\DCOMS\\"));
-        } catch (FileNotFoundException | DocumentException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-//        System.out.println(hrInterface.getEmployeeFullDetails("jojo").getDeduction(12));
+//        try {
+//            System.out.println(hrInterface.getPayrollDocument("jojo", 1, "C:\\Users\\xiuha\\OneDrive\\Desktop\\DCOMS\\"));
+//        } catch (FileNotFoundException | DocumentException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        System.out.println(hrInterface.getEmployeeFullDetails("hoho"));
     }
 }
