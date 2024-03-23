@@ -3,6 +3,7 @@ package hrpayrollsystem;
 import java.io.Serializable;
 
 public class Deduction implements Serializable {
+    private static final long serialVersionUID = 20120731125400L;
     private int month;
     private double deductionValue;
 
