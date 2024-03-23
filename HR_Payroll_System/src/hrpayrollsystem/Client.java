@@ -11,17 +11,9 @@ import java.util.logging.Logger;
 
 public class Client {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        Interface hrInterface = (Interface)Naming.lookup("rmi://localhost:1040/HrServer");
-        
-            //        Employee newEmployee = new Employee("jojo", "jojo", "Jonathan", "Joestar", "021013141033", "EMP001", "jojo@gmail.com");
-//        hrInterface.insertEmployee(newEmployee);
-//        System.out.println(hrInterface.validateRegistration("jojo", "Jonathan", "Joestar", "021013141033", "jojo@gmail.com", "80", "jojo", "").isValid());
-//        System.out.println(hrInterface.validateRegistration("jojo", "Jonathan", "Joestar", "021013141033", "jojo@gmail.com", "80", "jojo", "").getErrorMessage());
-//        try {
-//            System.out.println(hrInterface.getPayrollDocument("jojo", 1, "C:\\Users\\xiuha\\OneDrive\\Desktop\\DCOMS\\"));
-//        } catch (FileNotFoundException | DocumentException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        System.out.println(hrInterface.getEmployeeFullDetails("hoho"));
+        //Interface hrInterface = (Interface)Naming.lookup("rmi://localhost:1040/HrServer");
+        Interface hrInterface = null;
+        Login login = new Login(hrInterface, new LoginModel("username", "password"));
+        login.setVisible(true);
     }
 }
