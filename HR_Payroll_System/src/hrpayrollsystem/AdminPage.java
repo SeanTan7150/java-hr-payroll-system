@@ -20,11 +20,11 @@ public class AdminPage extends javax.swing.JFrame {
         };
         
         //ArrayList<Employee> employeeList = // TODO Get employee data and put it in here then delete the bottom
-        Employee employee1 = new Employee("test", "test", "test", "test", "test", "test", "test");
-        Employee employee2 = new Employee("test", "test", "qwer", "wer", "test", "test", "test");
+        Employee employee1 = new Employee("test", "test", "test", "test", "test", "test", "test", 24);
+        Employee employee2 = new Employee("test", "test", "qwer", "wer", "test", "test", "test", 24);
         ArrayList<Deduction> deductionList = new ArrayList<Deduction>();
         Employee employee3 = new Employee("asdf", "Asdf", "A", "B", "123", "tp123", "engineer",
-            "a@email.com", 100.00, 4000.00, 4500.00, 4800.00, 10, deductionList);
+            "a@email.com", 25, 100.00, 4000.00, 4500.00, 4800.00, 10, deductionList);
         ArrayList<Employee> employeeList = new ArrayList<Employee>();
         employeeList.add(employee1);
         employeeList.add(employee2);
