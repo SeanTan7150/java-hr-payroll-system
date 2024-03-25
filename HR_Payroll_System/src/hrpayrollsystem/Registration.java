@@ -1,5 +1,6 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +13,6 @@ import java.util.logging.Logger;
 
 public class Registration extends javax.swing.JFrame {
     private Interface hrInterface;
-    
     
     /**
      * Creates new form registration
@@ -232,7 +232,7 @@ public class Registration extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void first_name_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_first_name_fieldActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_first_name_fieldActionPerformed
 
     private void register_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register_buttonActionPerformed
@@ -245,26 +245,25 @@ public class Registration extends javax.swing.JFrame {
         String pass = String.valueOf(password_field.getPassword());
         String re_pass = String.valueOf(confirm_password_field.getPassword());
         String employeeID = null; 
-        String role = "employee";
         
         //make the employee_id auto increase by 1 when register
-        try {
-        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
-        Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("select max(employee_id) as max_emp_id from employee"); 
-
-            if (rs.next()) { //check if there are any results available in the rs 
-                int maxEmpId = rs.getInt("max_emp_id");
-                employeeID = String.valueOf(maxEmpId + 1); 
-            } else {
-                // Handle the case where there are no employees in the table
-                // Start with 1 if the table is empty
-                employeeID = "1"; 
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
+//        Statement stm = conn.createStatement();
+//        ResultSet rs = stm.executeQuery("select max(employee_id) as max_emp_id from employee"); 
+//
+//            if (rs.next()) { //check if there are any results available in the rs 
+//                int maxEmpId = rs.getInt("max_emp_id");
+//                employeeID = String.valueOf(maxEmpId + 1); 
+//            } else {
+//                // Handle the case where there are no employees in the table
+//                // Start with 1 if the table is empty
+//                employeeID = "1"; 
+//            }
+//            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         try {
             //check input validation
@@ -344,61 +343,35 @@ public class Registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
                         JOptionPane.ERROR_MESSAGE);
             }
-            else if(check_username(uname))
+            else if(!hrInterface.checkUsernameExist(uname).isValid())
             {
                 JOptionPane.showMessageDialog(null, "This username already exists", "Invalid Input",
                         JOptionPane.ERROR_MESSAGE);
             }
 
             else{
-                try 
-                {
-                    Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); 
-                    PreparedStatement stm = conn.prepareStatement("INSERT INTO employee(username, first_name, last_name, ic_passport_no, email, age, password, employee_id, role) VALUES (?,?,?,?,?,?,?,?,?)");  
-                    stm.setString(1, uname);
-                    stm.setString(2, fname);
-                    stm.setString(3, lname);
-                    stm.setString(4, ic_passport_no);
-                    stm.setString(5, email);
-                    stm.setString(6, age);
-                    stm.setString(7, pass);
-                    stm.setString(8, employeeID);
-                    stm.setString(9, role);
-
-                    if(stm.executeUpdate() > 0)
-                    {
-                        JOptionPane.showMessageDialog(null, "New user is successfully added", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-                        
-                        LoginModel login_model = new LoginModel("username", "password");
-                        new Login(hrInterface, login_model).setVisible(true);
-                        this.dispose();
-                    }
-                    else 
-                    {
-                        JOptionPane.showMessageDialog(null, "Failed to added the user", "Failed",
-                        JOptionPane.ERROR_MESSAGE);
-                    }
-                    
-                } catch (SQLException ex) {
-                    Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Employee newEmployee = new Employee(uname, pass, fname, lname, ic_passport_no, employeeID, email, Integer.parseInt(age));
+                hrInterface.insertEmployee(newEmployee);
+                Login login = new Login(hrInterface, new LoginModel());
+                login.setVisible(true);
+                dispose();
             }
-        } catch (SQLException ex) {
+        } 
+        catch (RemoteException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_register_buttonActionPerformed
 
     private void email_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_email_fieldActionPerformed
 
     private void username_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        LoginModel login_model = new LoginModel("username", "password");
+        LoginModel login_model = new LoginModel();
         new Login(hrInterface, login_model).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -415,66 +388,30 @@ public class Registration extends javax.swing.JFrame {
     }//GEN-LAST:event_reset_buttonActionPerformed
 
     private void password_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_fieldActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_password_fieldActionPerformed
 
-    public boolean check_username(String uname)throws SQLException
-    {
-        ResultSet rs;
-        boolean checkUser = false;
-        
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); 
-            PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username =?");  
-                    
-            stm.setString(1, uname);
-            
-            rs = stm.executeQuery();
-            
-            if(rs.next())
-            {
-                checkUser = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         return checkUser;
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
+//    public boolean check_username(String uname)throws SQLException
+//    {
+//        ResultSet rs;
+//        boolean checkUser = false;
+//        
 //        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
+//            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); 
+//            PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username =?");  
+//                    
+//            stm.setString(1, uname);
+//            
+//            rs = stm.executeQuery();
+//            
+//            if(rs.next())
+//            {
+//                checkUser = true;
 //            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Registration().setVisible(true);
-//            }
-//        });
+//         return checkUser;
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
