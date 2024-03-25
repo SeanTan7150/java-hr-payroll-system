@@ -1,5 +1,6 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +13,6 @@ import java.util.logging.Logger;
 public class Login extends javax.swing.JFrame { 
     private Interface hrInterface;
     private LoginModel loginModel;
-    
     
     /**
      * Creates new form login
@@ -179,11 +179,11 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void username_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void password_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_fieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_password_fieldActionPerformed
 
     private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
@@ -207,11 +207,12 @@ public class Login extends javax.swing.JFrame {
                         JOptionPane.WARNING_MESSAGE);
             }
 
-            else if (login_validation(uname, password)) {
+            else if (hrInterface.validateLogin(uname, password).isValid()) {
                 JOptionPane.showMessageDialog(null,"login successfully", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
+                loginModel.serializeLogin(uname, password);
 
-                String role = get_role(uname);
+                String role = hrInterface.getUserRole(uname);
                 if ("employee".equals(role)) {
                     ClientHomepage c_home = new ClientHomepage(hrInterface, uname);
                     c_home.setVisible(true);
@@ -244,19 +245,10 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,"login failed", "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException ex) {
+        } 
+        catch (RemoteException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
 //        catch (FileNotFoundException ex) {
 //            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
 //        } catch (IOException ex) {
@@ -294,81 +286,34 @@ public class Login extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_forgot_pw_buttonActionPerformed
 
-    private boolean login_validation(String uname, String password) throws SQLException 
-    {
-        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
-        PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");  
-        stm.setString(1, uname);
-        stm.setString(2, password); 
-        
-        ResultSet resultSet = stm.executeQuery();
-        boolean isValid = resultSet.next();
-        resultSet.close(); 
-        stm.close();
-        conn.close(); 
-        return isValid;
-    }
+//    private boolean login_validation(String uname, String password) throws SQLException 
+//    {
+//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
+//        PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");  
+//        stm.setString(1, uname);
+//        stm.setString(2, password); 
+//        
+//        ResultSet resultSet = stm.executeQuery();
+//        boolean isValid = resultSet.next();
+//        resultSet.close(); 
+//        stm.close();
+//        conn.close(); 
+//        return isValid;
+//    }
     
-    private String get_role(String uname) throws SQLException 
-    {
-        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
-        PreparedStatement stm = conn.prepareStatement("SELECT role FROM employee WHERE username = ?");  
-        stm.setString(1, uname);
-        
-        ResultSet resultSet = stm.executeQuery();
-        String role = null;
-        if (resultSet.next()) {
-            role = resultSet.getString("role");
-        }
-        conn.close(); 
-        return role;
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//    private String get_role(String uname) throws SQLException 
+//    {
+//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
+//        PreparedStatement stm = conn.prepareStatement("SELECT role FROM employee WHERE username = ?");  
+//        stm.setString(1, uname);
+//        
+//        ResultSet resultSet = stm.executeQuery();
+//        String role = null;
+//        if (resultSet.next()) {
+//            role = resultSet.getString("role");
 //        }
-//        
-////        try (FileInputStream fileIn = new FileInputStream("login_data.ser");
-////            ObjectInputStream input = new ObjectInputStream(fileIn)) {
-////           login previousLogin = (login) input.readObject();
-////           // Use the deserialized login object's data if needed
-////           input.close();
-////        } catch (IOException | ClassNotFoundException e) {
-////            // Handle if no saved data or errors
-////            e.printStackTrace();
-////        }
-//        
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                LoginModel login_model = new LoginModel("username", "password");
-//                new Login(hrInterface, login_model).setVisible(true);
-//            }
-//        });
+//        conn.close(); 
+//        return role;
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
