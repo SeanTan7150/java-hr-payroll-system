@@ -1,5 +1,6 @@
 package hrpayrollsystem;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
@@ -179,11 +180,9 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void username_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_fieldActionPerformed
-
     }//GEN-LAST:event_username_fieldActionPerformed
 
     private void password_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_fieldActionPerformed
-
     }//GEN-LAST:event_password_fieldActionPerformed
 
     private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
@@ -210,9 +209,9 @@ public class Login extends javax.swing.JFrame {
             else if (hrInterface.validateLogin(uname, password).isValid()) {
                 JOptionPane.showMessageDialog(null,"login successfully", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
-                loginModel.serializeLogin(uname, password);
 
                 String role = hrInterface.getUserRole(uname);
+                loginModel.serializeLogin(uname, password);
                 if ("employee".equals(role)) {
                     ClientHomepage c_home = new ClientHomepage(hrInterface, uname);
                     c_home.setVisible(true);
@@ -245,10 +244,21 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,"login failed", "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } 
-        catch (RemoteException ex) {
+        } catch (RemoteException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } 
+//        catch (FileNotFoundException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
+//        catch (FileNotFoundException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
 //        catch (FileNotFoundException ex) {
 //            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
 //        } catch (IOException ex) {
@@ -300,7 +310,7 @@ public class Login extends javax.swing.JFrame {
 //        conn.close(); 
 //        return isValid;
 //    }
-    
+//    
 //    private String get_role(String uname) throws SQLException 
 //    {
 //        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
