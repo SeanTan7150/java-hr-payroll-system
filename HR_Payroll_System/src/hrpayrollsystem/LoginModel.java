@@ -1,44 +1,22 @@
 package hrpayrollsystem;
 
-//import java.io.IOException;
 import java.io.FileInputStream; 
-//import java.io.FileNotFoundException;
 import java.io.FileOutputStream; 
 import java.io.ObjectInputStream; 
 import java.io.ObjectOutputStream; 
-//import javax.swing.text.GapContent;
-//import java.sql.SQLException;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
-//import javax.swing.JOptionPane;
 
 public class LoginModel implements java.io.Serializable{
     private String username;
     private String password;
     
-    
-    public LoginModel(String username, String password) {
-//        this.username = username;
-//        this.password = password;
-        this.username = "employee_username";
-        this.password = "employee_password";
-
+    public LoginModel() {
         try{
             ObjectInputStream is = new ObjectInputStream(new FileInputStream("loginModelFile.ser"));
-            username = (String) is.readObject();
-            password = (String) is.readObject();
+            this.username = (String) is.readObject();
+            this.password = (String) is.readObject();
             is.close();
         } catch(Exception ex){
         ex.printStackTrace();
-        }
-        try{
-            FileOutputStream fs = new FileOutputStream("loginModelFile.ser");
-            ObjectOutputStream os = new ObjectOutputStream(fs);
-            os.writeObject(username);
-            os.writeObject(password);
-            os.close();
-        }catch(Exception ex){
-            ex.printStackTrace();
         }
 
     
@@ -68,6 +46,18 @@ public class LoginModel implements java.io.Serializable{
 
     public String getPassword() {
         return password;
+    }
+    
+    public void serializeLogin(String username, String password) {
+        try {
+            FileOutputStream fs = new FileOutputStream("loginModelFile.ser");
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(username);
+            os.writeObject(password);
+            os.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
 //    private void writeObject(ObjectOutputStream out) throws IOException {
