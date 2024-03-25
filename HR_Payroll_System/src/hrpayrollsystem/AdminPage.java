@@ -1,6 +1,10 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -11,24 +15,17 @@ public class AdminPage extends javax.swing.JFrame {
     private Interface hrInterface;
     private AdminPage adminPage = this;
 
-    public AdminPage(Interface hrInterface) {
+    public AdminPage(Interface hrInterface) throws RemoteException {
         initComponents();
         this.hrInterface = hrInterface;
-
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        
         String[] tableHeaders = new String[] {
             "First Name", "Last Name", "Employee ID", "Job Position", " "
         };
         
-        //ArrayList<Employee> employeeList = // TODO Get employee data and put it in here then delete the bottom
-        Employee employee1 = new Employee("test", "test", "test", "test", "test", "test", "test", 24);
-        Employee employee2 = new Employee("test", "test", "qwer", "wer", "test", "test", "test", 24);
-        ArrayList<Deduction> deductionList = new ArrayList<Deduction>();
-        Employee employee3 = new Employee("asdf", "Asdf", "A", "B", "123", "tp123", "engineer",
-            "a@email.com", 25, 100.00, 4000.00, 4500.00, 4800.00, 10, deductionList);
-        ArrayList<Employee> employeeList = new ArrayList<Employee>();
-        employeeList.add(employee1);
-        employeeList.add(employee2);
-        employeeList.add(employee3);
+        ArrayList<Employee> employeeList = hrInterface.getAllEmployeeFullDetails(currentMonth);
         
         DefaultTableModel tableModel = new DefaultTableModel(tableHeaders, 0);
         for(Employee employee : employeeList) {
@@ -41,9 +38,14 @@ public class AdminPage extends javax.swing.JFrame {
         ActionButtonEvent event = new ActionButtonEvent() {
             @Override
             public void onEdit(int row) {
-                EmployeeDetailsPage employeeDetailsPage = new EmployeeDetailsPage(hrInterface, adminPage, employeeList.get(row));
-                employeeDetailsPage.setVisible(true);
-                setAdminPageVisibility(false);
+                try {
+                    EmployeeDetailsPage employeeDetailsPage = new EmployeeDetailsPage(hrInterface, adminPage, employeeList.get(row));
+                    employeeDetailsPage.setVisible(true);
+                    setAdminPageVisibility(false);
+                } 
+                catch (RemoteException ex) {
+                    Logger.getLogger(AdminPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             
         };
@@ -141,30 +143,15 @@ public class AdminPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void generatePayrollReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePayrollReportButtonActionPerformed
-        AdminPayrollReportPage adminPayrollReportPage = new AdminPayrollReportPage(hrInterface, adminPage);
-        adminPayrollReportPage.setVisible(true);
-        setAdminPageVisibility(false);
-    }//GEN-LAST:event_generatePayrollReportButtonActionPerformed
-
-    public static void main(String args[]) {
-
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            AdminPayrollReportPage adminPayrollReportPage = new AdminPayrollReportPage(hrInterface, adminPage);
+            adminPayrollReportPage.setVisible(true);
+            setAdminPageVisibility(false);
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(AdminPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }//GEN-LAST:event_generatePayrollReportButtonActionPerformed
     
     public void setAdminPageVisibility(boolean visibility) {
         this.setVisible(visibility);

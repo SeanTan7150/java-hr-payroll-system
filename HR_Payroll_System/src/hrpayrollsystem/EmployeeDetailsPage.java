@@ -1,18 +1,25 @@
 package hrpayrollsystem;
 
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EmployeeDetailsPage extends javax.swing.JFrame {
 
     private Interface hrInterface;
     private AdminPage adminPage;
-    
-    public EmployeeDetailsPage(Interface hrInterface, AdminPage adminPage, Employee employee) {
+    private Employee employee;
+
+    public EmployeeDetailsPage(Interface hrInterface, AdminPage adminPage, Employee employee) throws RemoteException {
         initComponents();
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
         this.hrInterface = hrInterface;
         this.adminPage = adminPage;
-        
+        this.employee = employee;
+
         // Display personal information
         usernameTextField.setText(employee.getUsername());
         firstNameTextField.setText(employee.getFirstName());
@@ -21,17 +28,16 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
         employeeIdTextField.setText(employee.getEmployeeId());
         jobPositionTextField.setText(employee.getJobPosition());
         emailTextField.setText(employee.getEmail());
-        
+        ageTextField.setText(Integer.toString(employee.getAge()));
+
         // Display salary information
         allowanceTextField.setText(Double.toString(employee.getAllowance()));
         basicSalaryTextField.setText(Double.toString(employee.getBasicSalary()));
         grossSalaryText.setText(Double.toString(employee.getGrossSalary()));
         netSalaryText.setText(Double.toString(employee.getNetSalary()));;
         incomeTaxPercentageText.setText(Double.toString(employee.getIncomeTax()));
-        
+
         // Display monthly deduction information
-        Calendar calendar = Calendar.getInstance();
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
         deductionMonthComboBox.setSelectedIndex(currentMonth - 1);
         deductionTextField.setText(Double.toString(employee.getDeduction(currentMonth)));
     }
@@ -65,6 +71,8 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
         personalInformationLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
+        ageLabel = new javax.swing.JLabel();
+        ageTextField = new javax.swing.JTextField();
         salaryInformationPanel = new javax.swing.JPanel();
         salaryInformationLabel = new javax.swing.JLabel();
         basicSalaryLabel = new javax.swing.JLabel();
@@ -146,6 +154,12 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
         usernameLabel.setText("Username");
 
         usernameTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        usernameTextField.setEnabled(false);
+
+        ageLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        ageLabel.setText("Age");
+
+        ageTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout personalInformationPanelLayout = new javax.swing.GroupLayout(personalInformationPanel);
         personalInformationPanel.setLayout(personalInformationPanelLayout);
@@ -174,15 +188,21 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
                                     .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(icNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                        .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(emailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lastNameLabel)
-                            .addComponent(jobPositionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jobPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(personalInformationPanelLayout.createSequentialGroup()
+                                .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(emailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lastNameLabel)
+                                    .addComponent(jobPositionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jobPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(personalInformationPanelLayout.createSequentialGroup()
+                                .addComponent(ageLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(118, 118, 118))))
         );
         personalInformationPanelLayout.setVerticalGroup(
@@ -192,7 +212,10 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
                 .addComponent(personalInformationLabel)
                 .addGap(18, 18, 18)
                 .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(usernameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ageLabel)
+                        .addComponent(ageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(usernameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(personalInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -307,14 +330,11 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
                             .addComponent(incomeTaxPercentageLabel)
                             .addComponent(monthlyDeductionLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(salaryInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(salaryInformationPanelLayout.createSequentialGroup()
-                                .addComponent(incomeTaxPercentageText, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(salaryInformationPanelLayout.createSequentialGroup()
-                                .addComponent(deductionMonthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(deductionTextField))))
+                        .addGroup(salaryInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(deductionMonthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(incomeTaxPercentageText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deductionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
                     .addComponent(salaryInformationLabel))
                 .addContainerGap())
         );
@@ -391,9 +411,33 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add code to save to server/ db
-        adminPage.setAdminPageVisibility(true);
-        dispose();
+        try {
+            // Get values
+            String username = usernameTextField.getText();
+            String firstName = firstNameTextField.getText();
+            String lastName = lastNameTextField.getText();
+            String icNumber = icNumberTextField.getText();
+            String employeeId = employeeIdTextField.getText();
+            String jobPosition = jobPositionTextField.getText();
+            String email = emailTextField.getText();
+            int age = Integer.parseInt(ageTextField.getText());
+            double allowance = Double.parseDouble(allowanceTextField.getText());
+            double basicSalary = Double.parseDouble(basicSalaryTextField.getText());
+            int month = deductionMonthComboBox.getSelectedIndex() + 1;
+            double deductionAmount = Double.parseDouble(deductionTextField.getText());
+
+            // Save values into database
+            hrInterface.updateEmployee(username, firstName, lastName, email, age);
+            hrInterface.updateEmployeeJobInformation(username, icNumber, employeeId, jobPosition);
+            hrInterface.updateEmployeeSalary(username, basicSalary, allowance);
+            hrInterface.updateEmployeeDeduction(username, employeeId, month, deductionAmount);
+
+            AdminPage adminPage = new AdminPage(hrInterface);
+            adminPage.setAdminPageVisibility(true);
+            dispose();
+        } catch (RemoteException ex) {
+            Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -402,22 +446,67 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void deductionMonthComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deductionMonthComboBoxActionPerformed
-        // TODO get employee deduction from server
+        int selectedMonth = deductionMonthComboBox.getSelectedIndex() + 1;
+        deductionTextField.setText(Double.toString(employee.getDeduction(selectedMonth)));
     }//GEN-LAST:event_deductionMonthComboBoxActionPerformed
 
     private void basicSalaryTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_basicSalaryTextFieldFocusLost
-        // TODO recalculate gross and net pay
+        try {
+            // Get salary information
+            double updatedBasicSalary = Double.parseDouble(basicSalaryTextField.getText());
+            double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
+            double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
+            double deduction = Double.parseDouble(deductionTextField.getText());
+            
+            // Set salary information
+            incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
+            grossSalaryText.setText(Double.toString(updatedGrossSalary));
+            netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_basicSalaryTextFieldFocusLost
 
     private void allowanceTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_allowanceTextFieldFocusLost
-        // TODO recalculate gross and net pay
+        try {
+            // Get salary information
+            double updatedBasicSalary = Double.parseDouble(basicSalaryTextField.getText());
+            double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
+            double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
+            double deduction = Double.parseDouble(deductionTextField.getText());
+            
+            // Set salary information
+            incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
+            grossSalaryText.setText(Double.toString(updatedGrossSalary));
+            netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_allowanceTextFieldFocusLost
 
     private void deductionTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deductionTextFieldFocusLost
-        // TODO recalculate gross and net pay
+        try {
+            // Get salary information
+            double updatedBasicSalary = Double.parseDouble(basicSalaryTextField.getText());
+            double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
+            double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
+            double deduction = Double.parseDouble(deductionTextField.getText());
+            
+            // Set salary information
+            incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
+            grossSalaryText.setText(Double.toString(updatedGrossSalary));
+            netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_deductionTextFieldFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel ageLabel;
+    private javax.swing.JTextField ageTextField;
     private javax.swing.JLabel allowanceLabel;
     private javax.swing.JFormattedTextField allowanceTextField;
     private javax.swing.JLabel basicSalaryLabel;
