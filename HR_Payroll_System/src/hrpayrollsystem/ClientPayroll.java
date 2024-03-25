@@ -571,7 +571,7 @@ public class ClientPayroll extends javax.swing.JFrame {
             basic_salary_field.setText(String.valueOf(df.format(employee.getBasicSalary()))); //double must be converted into string before set in the field
             allowance_field.setText(String.valueOf(df.format(employee.getAllowance())));
             gross_pay_field.setText(String.valueOf(df.format(employee.getGrossSalary())));
-            deduction_field.setText(String.valueOf(df.format(employee.getDeduction(selectedMonth - 1))));
+            deduction_field.setText(String.valueOf(df.format(employee.getDeduction(selectedMonth + 1))));
             income_tax_field.setText(String.valueOf(df.format(employee.getIncomeTax())));
             epf_field.setText(String.valueOf(df.format(employee.getBasicSalary() * hrInterface.getEPF())));
             socso_field.setText(String.valueOf(df.format(employee.getBasicSalary() * hrInterface.getSOCSO())));

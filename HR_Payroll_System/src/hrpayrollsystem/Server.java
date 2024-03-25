@@ -385,9 +385,9 @@ public class Server extends UnicastRemoteObject implements Interface {
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, newPassword);
                     pstm.setString(2, username);
-                    boolean updated = pstm.execute();
+                    int updated = pstm.executeUpdate();
 
-                    if (!updated) {
+                    if (updated <= 0) {
                         return new ValidationResult(false, "Failed to update", "Failed");
                     }
 

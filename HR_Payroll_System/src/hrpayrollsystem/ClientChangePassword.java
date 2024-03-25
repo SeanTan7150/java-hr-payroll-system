@@ -179,7 +179,7 @@ public class ClientChangePassword extends javax.swing.JFrame {
             ValidationResult userValidation = hrInterface.validateLogin(loggedInUsername, old_pw);
             
             if (userValidation.isValid()) {
-                ValidationResult changePasswordValidation = hrInterface.changePassword(loggedInUsername, loggedInUsername);
+                ValidationResult changePasswordValidation = hrInterface.changePassword(loggedInUsername, new_pw);
                 JOptionPane.showMessageDialog(null, changePasswordValidation.getMessage());
                 ClientHomepage clientHomepage = new ClientHomepage(hrInterface, loggedInUsername);
                 clientHomepage.setVisible(true);

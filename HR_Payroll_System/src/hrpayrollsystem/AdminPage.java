@@ -68,7 +68,6 @@ public class AdminPage extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(1076, 775));
-        setPreferredSize(new java.awt.Dimension(1076, 775));
 
         employeeListLabel.setBackground(new java.awt.Color(255, 255, 255));
         employeeListLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
