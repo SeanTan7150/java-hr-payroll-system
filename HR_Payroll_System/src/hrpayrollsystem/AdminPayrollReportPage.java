@@ -1,5 +1,6 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -11,7 +12,7 @@ public class AdminPayrollReportPage extends javax.swing.JFrame {
     private Interface hrInterface;
     private AdminPage adminPage;
     
-    public AdminPayrollReportPage(Interface hrInterface, AdminPage adminPage) {
+    public AdminPayrollReportPage(Interface hrInterface, AdminPage adminPage) throws RemoteException {
         initComponents();
         this.hrInterface = hrInterface;
         this.adminPage = adminPage;
@@ -25,16 +26,7 @@ public class AdminPayrollReportPage extends javax.swing.JFrame {
             "No.", "Emp. ID", "Employee Name", "Basic", "Allowance", "EPF", "SOCSO", "Deduction", "Net"
         };
         
-        //ArrayList<Employee> employeeList = // TODO Get employee data and put it in here then delete the bottom
-        Employee employee1 = new Employee("test", "test", "test", "test", "test", "test", "test", 24);
-        Employee employee2 = new Employee("test", "test", "qwer", "wer", "test", "test", "test", 24);
-        ArrayList<Deduction> deductionList = new ArrayList<Deduction>();
-        Employee employee3 = new Employee("asdf", "Asdf", "A", "B", "123", "tp123", "engineer",
-            "a@email.com", 25, 100.00, 4000.00, 4500.00, 4800.00, 10, deductionList);
-        ArrayList<Employee> employeeList = new ArrayList<Employee>();
-        employeeList.add(employee1);
-        employeeList.add(employee2);
-        employeeList.add(employee3);
+        ArrayList<Employee> employeeList = hrInterface.getAllEmployeeFullDetails(currentMonth);
         
         DefaultTableModel tableModel = new DefaultTableModel(tableHeaders, 0);
         int tableCount = 0;
@@ -271,24 +263,6 @@ public class AdminPayrollReportPage extends javax.swing.JFrame {
         adminPage.setVisible(true);
         dispose();
     }//GEN-LAST:event_closePayrollReportButtonActionPerformed
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminPayrollReportPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminPayrollReportPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminPayrollReportPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminPayrollReportPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel basicSalaryTotalText1;

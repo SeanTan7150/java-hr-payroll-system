@@ -8,6 +8,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.rmi.RemoteException;
@@ -17,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,16 +41,51 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class Server extends UnicastRemoteObject implements Interface {
+
+    private final double EPF = 0.09;
+    private final double SOCSO = 0.05;
+    private final double EIS = 0.002;
+
     public Server() throws RemoteException {
         super();
     }
-    
+
+    @Override
+    public double getEPF() throws RemoteException {
+        return EPF;
+    }
+
+    @Override
+    public double getSOCSO() throws RemoteException {
+        return SOCSO;
+    }
+
+    public double getEIS() throws RemoteException {
+        return EIS;
+    }
+
+    @Override
+    public String generateEmployeeId() throws RemoteException, SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery("select count(*) as max_emp_id from employee");
+
+        if (rs.next()) { //check if there are any results available in the rs 
+            int maxEmpId = rs.getInt("max_emp_id");
+            return String.valueOf(maxEmpId + 1);
+        } else {
+            // Handle the case where there are no employees in the table
+            // Start with 1 if the table is empty
+            return "1";
+        }
+    }
+
     // Insert new employee (default role = employee)
     @Override
     public void insertEmployee(Employee newEmployee) throws RemoteException {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
                 String sql = "INSERT INTO employee (USERNAME, "
                         + "FIRST_NAME, "
                         + "LAST_NAME, "
@@ -62,22 +99,22 @@ public class Server extends UnicastRemoteObject implements Interface {
                         + "EMPLOYEE_ID,"
                         + "ROLE)"
                         + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, newEmployee.getUsername());
                     pstm.setString(2, newEmployee.getFirstName());
                     pstm.setString(3, newEmployee.getLastName());
                     pstm.setString(4, newEmployee.getIcNumber());
                     pstm.setString(5, newEmployee.getEmail());
-                    pstm.setInt(6, 28);
+                    pstm.setInt(6, newEmployee.getAge());
                     pstm.setString(7, newEmployee.getPassword());
-                    pstm.setDouble(8, 50.00);
-                    pstm.setDouble(9, 3000.00);
-                    pstm.setString(10, "developer");
-                    pstm.setString(11, newEmployee.getEmployeeId());
+                    pstm.setDouble(8, 0.00);
+                    pstm.setDouble(9, 0.00);
+                    pstm.setString(10, "");
+                    pstm.setString(11, generateEmployeeId());
                     pstm.setString(12, "employee");
                     pstm.execute();
-                    
+
                     conn.commit();
                     conn.close();
                 }
@@ -86,19 +123,19 @@ public class Server extends UnicastRemoteObject implements Interface {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void updateEmployee(String username, String firstName, String lastName, String email, int age) throws RemoteException {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
                 String sql = "UPDATE employee SET "
                         + "FIRST_NAME = ?, "
                         + "LAST_NAME = ?, "
                         + "EMAIL = ?, "
                         + "AGE = ? "
                         + "WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, firstName);
                     pstm.setString(2, lastName);
@@ -106,7 +143,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                     pstm.setInt(4, age);
                     pstm.setString(5, username);
                     pstm.execute();
-                    
+
                     conn.commit();
                     conn.close();
                 }
@@ -115,7 +152,161 @@ public class Server extends UnicastRemoteObject implements Interface {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @Override
+    public void updateEmployeeJobInformation(String username, String icNumber, String employeeId, String jobPosition) throws RemoteException {
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
+                String sql = "UPDATE employee SET "
+                        + "IC_PASSPORT_NO = ?, "
+                        + "EMPLOYEE_ID = ?, "
+                        + "POSITION = ? "
+                        + "WHERE USERNAME = ?";
+
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, icNumber);
+                    pstm.setString(2, employeeId);
+                    pstm.setString(3, jobPosition);
+                    pstm.setString(4, username);
+                    pstm.execute();
+
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void updateEmployeeSalary(String username, double basicSalary, double allowance) throws RemoteException {
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
+                String sql = "UPDATE employee SET "
+                        + "ALLOWANCE = ?, "
+                        + "BASIC_SALARY = ? "
+                        + "WHERE USERNAME = ?";
+
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setDouble(1, allowance);
+                    pstm.setDouble(2, basicSalary);
+                    pstm.setString(3, username);
+                    pstm.execute();
+
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void updateEmployeeDeduction(String username, String employeeId, int month, double deductionAmount) {
+        try {
+            String monthName = "";
+            switch (month) {
+                case 1:
+                    monthName = "January";
+                    break;
+                case 2:
+                    monthName = "February";
+                    break;
+                case 3:
+                    monthName = "March";
+                    break;
+                case 4:
+                    monthName = "April";
+                    break;
+                case 5:
+                    monthName = "May";
+                    break;
+                case 6:
+                    monthName = "June";
+                    break;
+                case 7:
+                    monthName = "July";
+                    break;
+                case 8:
+                    monthName = "August";
+                    break;
+                case 9:
+                    monthName = "September";
+                    break;
+                case 10:
+                    monthName = "October";
+                    break;
+                case 11:
+                    monthName = "November";
+                    break;
+                case 12:
+                    monthName = "December";
+                    break;
+            }
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
+                String checkSql = "SELECT * FROM deduction "
+                        + "WHERE USERNAME = ? "
+                        + "AND MONTH = ?";
+
+                try (PreparedStatement pstm = conn.prepareStatement(checkSql)) {
+                    pstm.setString(1, username);
+                    pstm.setString(2, monthName);
+
+                    ResultSet result = pstm.executeQuery();
+
+                    if (result.next()) {
+                        String updateSql = "UPDATE deduction SET "
+                                + "AMOUNT = ? "
+                                + "WHERE USERNAME = ? "
+                                + "AND MONTH = ?";
+
+                        try (PreparedStatement statement = conn.prepareStatement(updateSql)) {
+                            statement.setDouble(1, deductionAmount);
+                            statement.setString(2, username);
+                            statement.setString(3, monthName);
+                            statement.execute();
+
+                            conn.commit();
+                        }
+                    } else {
+                        String deductionId = "";
+                        String getTotalCountSql = "SELECT COUNT(*) FROM deduction";
+                        try (PreparedStatement statement = conn.prepareStatement(getTotalCountSql)) {
+                            ResultSet countResult = statement.executeQuery();
+                            if (countResult.next()) {
+                                int totalRows = countResult.getInt(1);
+                                deductionId = Integer.toString(totalRows + 1);
+                            }
+                        }
+
+                        String createSql = "INSERT INTO deduction (DEDUCTION_ID, EMPLOYEE_ID, MONTH, AMOUNT, USERNAME)\n"
+                                + "VALUES (?, ?, ?, ?, ?)";
+
+                        try (PreparedStatement statement = conn.prepareStatement(createSql)) {
+                            statement.setString(1, deductionId);
+                            statement.setString(2, employeeId);
+                            statement.setString(3, monthName);
+                            statement.setDouble(4, deductionAmount);
+                            statement.setString(5, username);
+                            statement.execute();
+
+                            conn.commit();
+                        }
+                    }
+                }
+
+                conn.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @Override
     public int getChangePasswordOTP() throws RemoteException {
         int otp = 0;
@@ -123,50 +314,50 @@ public class Server extends UnicastRemoteObject implements Interface {
         otp = 100000 + random.nextInt(900000);
         return otp;
     }
-    
+
     @Override
     public long getTimestamp() throws RemoteException {
         return System.currentTimeMillis();
     }
-    
+
     @Override
     public void sendMailOTP(String username, int otp) throws RemoteException {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT EMAIL FROM employee WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     String email = null;
                     if (rs.next()) {
                         email = rs.getString(1);
                     }
-                    
+
                     // Setup SMTP server properties
                     Properties props = System.getProperties();
                     props.put("mail.smtp.starttls.enable", "true");
                     props.put("mail.smtp.host", "smtp.gmail.com");
                     props.put("mail.smtp.port", "587");
                     props.put("mail.smtp.auth", "true");
-                    
+
                     Session newSession = Session.getDefaultInstance(props, null);
-                    
+
                     String from = "dcomsnoreply@gmail.com"; //dcoms123
                     String password = "zfod kmoz ztcz iuwc";
                     String host = "smtp.gmail.com";
                     String subject = "Password Reset for the Payroll System";
-                    String body = "Hi, " + username + ". \nYour OTP for password reset is " + otp 
+                    String body = "Hi, " + username + ". \nYour OTP for password reset is " + otp
                             + ". Please enter the received OTP when resetting your password within 30 minutes. "
                             + "If you didn't request a password reset, please ignore this email. \n\n\nSincerely, \nAdmin";
-                    
+
                     Message msg = new MimeMessage(newSession);
                     msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
                     msg.setSubject(subject);
                     msg.setText(body);
-                    
+
                     try (Transport transport = newSession.getTransport("smtp")) {
                         transport.connect(host, from, password);
                         transport.sendMessage(msg, msg.getAllRecipients());
@@ -183,54 +374,54 @@ public class Server extends UnicastRemoteObject implements Interface {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public ValidationResult changePassword(String username, String newPassword) throws RemoteException {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
                 String sql = "UPDATE employee SET PASSWORD = ? WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, newPassword);
                     pstm.setString(2, username);
-                    conn.commit();
-                    conn.close();
-                    
-                    if (pstm.executeUpdate() <= 0) {
+                    boolean updated = pstm.execute();
+
+                    if (!updated) {
                         return new ValidationResult(false, "Failed to update", "Failed");
                     }
+
+                    conn.commit();
+                    conn.close();
                 }
-                conn.commit();
-                conn.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ValidationResult(true, "Your new password successfully updated", "Success");
     }
-    
+
     @Override
     public Employee getEmployeeBasicDetails(String username) throws RemoteException {
         Employee loggedInUser = null;
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM employee WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     if (rs.next()) {
                         loggedInUser = new Employee(
                                 rs.getString("USERNAME"),
-                                rs.getString("PASSWORD"), 
-                                rs.getString("FIRST_NAME"), 
-                                rs.getString("LAST_NAME"), 
-                                rs.getString("IC_PASSPORT_NO"), 
-                                rs.getString("EMPLOYEE_ID"), 
-                                rs.getString("EMAIL"), 
+                                rs.getString("PASSWORD"),
+                                rs.getString("FIRST_NAME"),
+                                rs.getString("LAST_NAME"),
+                                rs.getString("IC_PASSPORT_NO"),
+                                rs.getString("EMPLOYEE_ID"),
+                                rs.getString("EMAIL"),
                                 rs.getInt("AGE")
                         );
                     }
@@ -243,28 +434,28 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return loggedInUser;
     }
-    
+
     @Override
     public ArrayList<Employee> getAllEmployeeBasicDetails() throws RemoteException {
         ArrayList<Employee> employees = new ArrayList<>();
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM employee WHERE ROLE = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, "employee");
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     while (rs.next()) {
                         Employee employee = new Employee(
                                 rs.getString("USERNAME"),
-                                rs.getString("PASSWORD"), 
-                                rs.getString("FIRST_NAME"), 
-                                rs.getString("LAST_NAME"), 
-                                rs.getString("IC_PASSPORT_NO"), 
-                                rs.getString("EMPLOYEE_ID"), 
-                                rs.getString("EMAIL"), 
+                                rs.getString("PASSWORD"),
+                                rs.getString("FIRST_NAME"),
+                                rs.getString("LAST_NAME"),
+                                rs.getString("IC_PASSPORT_NO"),
+                                rs.getString("EMPLOYEE_ID"),
+                                rs.getString("EMAIL"),
                                 rs.getInt("AGE")
                         );
                         employees.add(employee);
@@ -278,7 +469,7 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return employees;
     }
-    
+
     @Override
     public Employee getEmployeeFullDetails(String username, int month) throws RemoteException {
         Employee loggedInUser = null;
@@ -291,43 +482,44 @@ public class Server extends UnicastRemoteObject implements Interface {
 
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM employee WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     if (rs.next()) {
                         allowance = rs.getDouble("ALLOWANCE");
                         basicSalary = rs.getDouble("BASIC_SALARY");
                         grossSalary = basicSalary + allowance;
                         incomeTax = getIncomeTax(basicSalary);
+                        deductionList = getDeductionList(rs.getString("USERNAME"));
                         loggedInUser = new Employee(
                                 rs.getString("USERNAME"),
-                                rs.getString("PASSWORD"), 
-                                rs.getString("FIRST_NAME"), 
-                                rs.getString("LAST_NAME"), 
-                                rs.getString("IC_PASSPORT_NO"), 
-                                rs.getString("EMPLOYEE_ID"), 
+                                rs.getString("PASSWORD"),
+                                rs.getString("FIRST_NAME"),
+                                rs.getString("LAST_NAME"),
+                                rs.getString("IC_PASSPORT_NO"),
+                                rs.getString("EMPLOYEE_ID"),
                                 rs.getString("POSITION"),
-                                rs.getString("EMAIL"), 
+                                rs.getString("EMAIL"),
                                 rs.getInt("AGE"),
                                 allowance,
-                                0,
+                                netSalary,
                                 grossSalary,
                                 basicSalary,
                                 incomeTax,
                                 deductionList
                         );
                     }
-                    
+
                     if (loggedInUser != null) {
                         loggedInUser.setDeductionList(getDeductionList(username));
                         netSalary = grossSalary - loggedInUser.getDeduction(month) - incomeTax;
                         loggedInUser.setNetSalary(netSalary);
                     }
-                    
+
                     conn.commit();
                     conn.close();
                 }
@@ -351,12 +543,12 @@ public class Server extends UnicastRemoteObject implements Interface {
 
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM employee WHERE ROLE = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, "employee");
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     while (rs.next()) {
                         username = rs.getString("USERNAME");
@@ -366,13 +558,13 @@ public class Server extends UnicastRemoteObject implements Interface {
                         incomeTax = getIncomeTax(basicSalary);
                         Employee employee = new Employee(
                                 username,
-                                rs.getString("PASSWORD"), 
-                                rs.getString("FIRST_NAME"), 
-                                rs.getString("LAST_NAME"), 
-                                rs.getString("IC_PASSPORT_NO"), 
-                                rs.getString("EMPLOYEE_ID"), 
+                                rs.getString("PASSWORD"),
+                                rs.getString("FIRST_NAME"),
+                                rs.getString("LAST_NAME"),
+                                rs.getString("IC_PASSPORT_NO"),
+                                rs.getString("EMPLOYEE_ID"),
                                 rs.getString("POSITION"),
-                                rs.getString("EMAIL"), 
+                                rs.getString("EMAIL"),
                                 rs.getInt("AGE"),
                                 allowance,
                                 0,
@@ -383,7 +575,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                         );
                         employees.add(employee);
                     }
-                    
+
                     for (Employee employee : employees) {
                         employee.setDeductionList(getDeductionList(employee.getUsername()));
                         netSalary = employee.getGrossSalary() - employee.getDeduction(month) - employee.getIncomeTax();
@@ -398,17 +590,42 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return employees;
     }
-    
+
+    public String getUserRole(String username) throws RemoteException {
+        String role = "";
+        try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
+                String sql = "SELECT ROLE FROM employee WHERE USERNAME = ?";
+
+                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+                    pstm.setString(1, username);
+                    ResultSet result = pstm.executeQuery();
+
+                    if (result.next()) {
+                        role = result.getString("ROLE");
+                    }
+                    conn.commit();
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return role;
+    }
+
     @Override
-    public String getPayrollDocument(String username, int month, String filePath) throws RemoteException, FileNotFoundException, DocumentException {
+    public String getPayrollDocument(String username, int month) throws RemoteException, FileNotFoundException, DocumentException {
         try {
             Employee employee = getEmployeeFullDetails(username, month);
             if (employee == null) {
                 return "Employee does not exist";
-            }
-            else {
+            } else {
                 Document doc = new Document();
-                PdfWriter.getInstance(doc, new FileOutputStream(filePath + username + ".pdf"));
+                File file = new File("./src/Payroll/payroll_" + username + ".pdf");
+                file.getParentFile().mkdirs();
+                PdfWriter.getInstance(doc, new FileOutputStream(file));
                 doc.open();
 
                 Paragraph companyName = new Paragraph("BHEL Company", FontFactory.getFont(FontFactory.TIMES_BOLD, 15));
@@ -424,27 +641,23 @@ public class Server extends UnicastRemoteObject implements Interface {
                 doc.add(date);
 
                 double basicSalary = employee.getBasicSalary();
-                double epf = basicSalary * 0.09;
-                double socso = basicSalary * 0.005;
-                double eis = basicSalary * 0.002;
 
                 Paragraph personalDetails = new Paragraph(
-                        "Personal Details:\n" 
+                        "Personal Details:\n"
                         + "username: " + employee.getUsername() + "\n"
                         + "IC/Passport No: " + employee.getIcNumber() + "\n"
                         + "Employee ID: " + employee.getEmployeeId() + "\n"
                         + "Position: " + employee.getJobPosition() + "\n"
-
                         + "\nPayment:\n"
                         + "Month: " + month + "\n"
                         + "Basic Salary: RM " + basicSalary + "\n"
                         + "Allowance: RM " + employee.getAllowance() + "\n"
-                        + "Gross Pay: RM " + employee.getGrossSalary()+ "\n"
-                        + "Deductions: RM " + employee.getDeduction(month)+ "\n"
-                        + "Income Tax: RM " + employee.getIncomeTax()+ "\n"
-                        + "EPF: RM " + epf + "\n"
-                        + "SOCSO: RM " + socso + "\n"
-                        + "EIS: RM " + eis + "\n"
+                        + "Gross Pay: RM " + employee.getGrossSalary() + "\n"
+                        + "Deductions: RM " + employee.getDeduction(month) + "\n"
+                        + "Income Tax: RM " + employee.getIncomeTax() + "\n"
+                        + "EPF: RM " + EPF * basicSalary + "\n"
+                        + "SOCSO: RM " + SOCSO * basicSalary + "\n"
+                        + "EIS: RM " + EIS * basicSalary + "\n"
                 );
                 Chunk netSalaryChunk = new Chunk("Net Salary: RM " + employee.getNetSalary());
                 netSalaryChunk.setUnderline(1, -2);
@@ -458,7 +671,7 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return "Payroll generated successfully!";
     }
-    
+
     @Override
     public HashMap<String, Double> getEmployeeTotals(int month) throws RemoteException {
         double totalBasicSalary = 0;
@@ -467,17 +680,17 @@ public class Server extends UnicastRemoteObject implements Interface {
         double totalSOCSO = 0;
         double totalDeduction = 0;
         double totalNetSalary = 0;
-        
+
         double basicSalary = 0;
         double epf = 0;
         double socso = 0;
-        
+
         ArrayList<Employee> employees = getAllEmployeeFullDetails(month);
         for (Employee employee : employees) {
             basicSalary = employee.getBasicSalary();
             epf = basicSalary * 0.09;
             socso = basicSalary * 0.005;
-            
+
             totalBasicSalary += basicSalary;
             totalAllowance += employee.getAllowance();
             totalEPF += epf;
@@ -485,7 +698,7 @@ public class Server extends UnicastRemoteObject implements Interface {
             totalDeduction += employee.getDeduction(month);
             totalNetSalary += employee.getNetSalary();
         }
-        
+
         HashMap<String, Double> totals = new HashMap<>();
         totals.put("BasicSalary", totalBasicSalary);
         totals.put("Allowance", totalAllowance);
@@ -495,20 +708,60 @@ public class Server extends UnicastRemoteObject implements Interface {
         totals.put("NetSalary", totalNetSalary);
         return totals;
     }
-    
+
     private ArrayList<Deduction> getDeductionList(String username) throws RemoteException {
         ArrayList<Deduction> deductionList = new ArrayList<>();
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM deduction WHERE USERNAME = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
-                    
+
                     ResultSet rs = pstm.executeQuery();
                     while (rs.next()) {
-                        deductionList.add(new Deduction(rs.getInt("MONTH"), rs.getDouble("AMOUNT")));
+                        String monthName = rs.getString("MONTH");
+                        int month = 0;
+                        switch (monthName) {
+                            case "January":
+                                month = 1;
+                                break;
+                            case "February":
+                                month = 2;
+                                break;
+                            case "March":
+                                month = 3;
+                                break;
+                            case "April":
+                                month = 4;
+                                break;
+                            case "May":
+                                month = 5;
+                                break;
+                            case "June":
+                                month = 6;
+                                break;
+                            case "July":
+                                month = 7;
+                                break;
+                            case "August":
+                                month = 8;
+                                break;
+                            case "September":
+                                month = 9;
+                                break;
+                            case "October":
+                                month = 10;
+                                break;
+                            case "November":
+                                month = 11;
+                                break;
+                            case "December":
+                                month = 12;
+                                break;
+                        }
+                        deductionList.add(new Deduction(month, rs.getDouble("AMOUNT")));
                     }
                     conn.commit();
                     conn.close();
@@ -519,36 +772,53 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return deductionList;
     }
-    
-    private double getIncomeTax(double basicSalary) throws RemoteException {
-        if (basicSalary < 5000) {
+
+    @Override
+    public double getIncomeTaxPercentage(double basicSalary) throws RemoteException {
+        if (basicSalary * 12 < 5000) {
             return 0;
+        } else if (basicSalary * 12 <= 20000) {
+            return 0.01;
+        } else if (basicSalary * 12 <= 35000) {
+            return 0.03;
         }
-        else if (basicSalary <= 20000) {
+        return 0.08;
+    }
+
+    @Override
+    public double getIncomeTax(double basicSalary) throws RemoteException {
+        if (basicSalary * 12 < 5000) {
+            return 0;
+        } else if (basicSalary * 12 <= 20000) {
             return basicSalary * 0.01;
-        }
-        else if (basicSalary <= 35000) {
+        } else if (basicSalary * 12 <= 35000) {
             return basicSalary * 0.03;
         }
         return basicSalary * 0.08;
     }
-    
+
+    @Override
+    public double calculateNetSalary(double basicSalary, double allowance, double deduction) throws RemoteException {
+        double totalOtherDeductions = (basicSalary * EPF) + (basicSalary * SOCSO) + (basicSalary * EIS);
+        return basicSalary + allowance - deduction - getIncomeTax(basicSalary) - totalOtherDeductions;
+    }
+
     // VALIDATION
     private ValidationResult validateUsername(String username) throws RemoteException {
         if (username.isEmpty()) {
             return new ValidationResult(false, "Add your username", "Missing Value");
-        }
-        else if (!username.matches("^[a-zA-Z]+$")) {
+        } else if (!username.matches("^[a-zA-Z]+$")) {
             return new ValidationResult(false, "Enter your username using letters only", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
-    private ValidationResult checkUsernameExist(String username) throws RemoteException {
+
+    @Override
+    public ValidationResult checkUsernameExist(String username) throws RemoteException {
         boolean checkUser = false;
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs")) {
                 String sql = "SELECT COUNT(*) FROM employee WHERE USERNAME = ?";
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
@@ -564,43 +834,40 @@ public class Server extends UnicastRemoteObject implements Interface {
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (checkUser) {
             return new ValidationResult(false, "This username already exists", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validateFirstName(String firstName) throws RemoteException {
         if (firstName.isEmpty()) {
             return new ValidationResult(false, "Add your first name", "Missing Value");
-        }
-        else if (!firstName.matches("^[a-zA-Z]+$")) {
+        } else if (!firstName.matches("^[a-zA-Z]+$")) {
             return new ValidationResult(false, "Enter your first name using letters only", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validateLastName(String lastName) throws RemoteException {
         if (lastName.isEmpty()) {
             return new ValidationResult(false, "Add your last name", "Missing Value");
-        }
-        else if (!lastName.matches("^[a-zA-Z]+$")) {
+        } else if (!lastName.matches("^[a-zA-Z]+$")) {
             return new ValidationResult(false, "Enter your last name using letters only", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validateICNumber(String icNumber) throws RemoteException {
         if (icNumber.isEmpty()) {
             return new ValidationResult(false, "Add your ic / passport number", "Missing Value");
-        }
-        else if (icNumber.matches("^[a-zA-Z]*$")) {
+        } else if (icNumber.matches("^[a-zA-Z]*$")) {
             return new ValidationResult(false, "IC should be number only, Passport number should be letters and number", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validateEmail(String email) throws RemoteException {
         if (email.isEmpty()) {
             return new ValidationResult(false, "Add your email", "Missing Value");
@@ -610,28 +877,24 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validateAge(String age) throws RemoteException {
         if (age.isEmpty()) {
             return new ValidationResult(false, "Add your age", "Missing Value");
-        }
-        else if (!age.matches("\\d+")) {
+        } else if (!age.matches("\\d+")) {
             return new ValidationResult(false, "Age must be an integer", "Invalid Input");
-        }
-        else if (age.length() > 2) {
+        } else if (age.length() > 2) {
             return new ValidationResult(false, "Enter a valid age (up to 2 digits)", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult validatePassword(String password, String confirmPassword) throws RemoteException {
         if (password.isEmpty()) {
             return new ValidationResult(false, "Add your password", "Missing Value");
-        }
-        else if (confirmPassword.isEmpty()) {
+        } else if (confirmPassword.isEmpty()) {
             return new ValidationResult(false, "Add your confirmed password", "Missing Value");
-        }
-        else if (!password.equals(confirmPassword)) {
+        } else if (!password.equals(confirmPassword)) {
             return new ValidationResult(false, "Retype your password again", "Invalid Input");
         }
         return new ValidationResult(true, "", "");
@@ -641,37 +904,34 @@ public class Server extends UnicastRemoteObject implements Interface {
         long current_time = System.currentTimeMillis();
         long time_diff = current_time - storedTimestamp;
         long expirationTime = 30 * 60 * 1000;
-        
+
         if (enteredOTP.isEmpty()) {
             return new ValidationResult(false, "Add your OTP", "Missing Value");
-        }
-        else if (!enteredOTP.matches("\\d+")) {
+        } else if (!enteredOTP.matches("\\d+")) {
             return new ValidationResult(false, "OTP must be an integer", "Invalid Input");
-        }
-        else if (Integer.parseInt(enteredOTP) != storedOTP) {
+        } else if (Integer.parseInt(enteredOTP) != storedOTP) {
             return new ValidationResult(false, "Invalid OTP. Password update failed.", "");
-        }
-        else if (time_diff > expirationTime) {
+        } else if (time_diff > expirationTime) {
             return new ValidationResult(false, "OTP has expired. Please request a new OTP.", "");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     private ValidationResult checkLogin(String username, String password) throws RemoteException {
         boolean login = false;
         String role = null;
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/PRS;create=true", "root", "root")) {
+            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
                 String sql = "SELECT * FROM employee WHERE USERNAME = ? and PASSWORD = ?";
-                
+
                 try (PreparedStatement pstm = conn.prepareStatement(sql)) {
                     pstm.setString(1, username);
                     pstm.setString(2, password);
-                    
+
                     try (ResultSet rs = pstm.executeQuery()) {
                         login = rs.next();
-                        
+
                         if (login) {
                             role = rs.getString("ROLE");
                         }
@@ -683,34 +943,33 @@ public class Server extends UnicastRemoteObject implements Interface {
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (!login) {
             return new ValidationResult(false, "login failed", "Error");
-        }
-        else if (!"employee".equals(role) && !"admin".equals(role)) {
+        } else if (!"employee".equals(role) && !"admin".equals(role)) {
             return new ValidationResult(false, "login failed due to the unknown user role", "Error");
         }
         return new ValidationResult(true, "", "");
     }
-    
+
     // Return true if input fields are valid
     // Else, return false, error message, and error type
     @Override
     public ValidationResult validateRegistration(
-            String username, 
-            String firstName, 
-            String lastName, 
-            String icNumber, 
-            String email, 
-            String age, 
-            String password, 
+            String username,
+            String firstName,
+            String lastName,
+            String icNumber,
+            String email,
+            String age,
+            String password,
             String confirmPassword
     ) throws RemoteException {
         ValidationResult isRegistrationValid = new ValidationResult(true, "", "");
         ExecutorService exe = Executors.newFixedThreadPool(8);
         try {
             List<Callable<ValidationResult>> validators = Arrays.asList(
-                    () -> validateUsername(username), 
+                    () -> validateUsername(username),
                     () -> validateFirstName(firstName),
                     () -> validateLastName(lastName),
                     () -> validateICNumber(icNumber),
@@ -719,7 +978,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                     () -> validatePassword(password, confirmPassword),
                     () -> checkUsernameExist(username)
             );
-            
+
             for (Callable<ValidationResult> validator : validators) {
                 ValidationResult result = exe.submit(validator).get();
                 if (!result.isValid()) {
@@ -735,7 +994,7 @@ public class Server extends UnicastRemoteObject implements Interface {
         exe.shutdown();
         return isRegistrationValid;
     }
-    
+
     // Return true if input fields are valid and login success
     // Else, return false, error message, and error type
     @Override
@@ -748,7 +1007,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                     () -> validatePassword(password, password),
                     () -> checkLogin(username, password)
             );
-            
+
             for (Callable<ValidationResult> validator : validators) {
                 ValidationResult result = exe.submit(validator).get();
                 if (!result.isValid()) {
@@ -774,7 +1033,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                     () -> validateUsername(username),
                     () -> checkUsernameExist(username)
             );
-            
+
             for (Callable<ValidationResult> validator : validators) {
                 ValidationResult result = exe.submit(validator).get();
                 if (!result.isValid()) {
@@ -799,7 +1058,7 @@ public class Server extends UnicastRemoteObject implements Interface {
                     () -> validateChangePasswordOTP(enteredOTP, storedOTP, storedTimestamp),
                     () -> validatePassword(newPassword, confirmPassword)
             );
-            
+
             for (Callable<ValidationResult> validator : validators) {
                 ValidationResult result = exe.submit(validator).get();
                 if (!result.isValid()) {

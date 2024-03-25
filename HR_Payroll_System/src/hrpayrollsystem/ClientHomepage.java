@@ -1,11 +1,14 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHomepage extends javax.swing.JFrame {
     private Interface hrInterface;
@@ -16,32 +19,9 @@ public class ClientHomepage extends javax.swing.JFrame {
      */
     public ClientHomepage(Interface hrInterface, String loggedInUsername) {
         initComponents();
+        this.hrInterface = hrInterface;
         this.loggedInUsername = loggedInUsername;
-        
-        try {
-            displayUserData(loggedInUsername);
-        } catch (SQLException ex) {
-            // Handle SQLException
-            ex.printStackTrace();
-        }
-    }
-
-    private void displayUserData(String loggedInUsername) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
-
-        // Query to retrieve additional data for the logged-in user
-        String query = "SELECT username, first_name, last_name, ic_passport_no, email, age, allowance FROM employee WHERE username = ?";
-        PreparedStatement stm = conn.prepareStatement(query);
-        stm.setString(1, loggedInUsername);
-        
-        ResultSet resultSet = stm.executeQuery();
-
-        if (resultSet.next()) {
-            String userName = resultSet.getString("username");
-            jLabel2.setText("Hi, " + userName);
-        }
-
-        conn.close();
+        jLabel2.setText("Hi, " + loggedInUsername);
     }
     
     /**
@@ -143,15 +123,25 @@ public class ClientHomepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void update_personal_details_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_personal_details_buttonActionPerformed
-        ClientDetails c_details = new ClientDetails(hrInterface, loggedInUsername);
-        c_details.setVisible(true);
-        this.dispose();
+        try {
+            ClientDetails c_details = new ClientDetails(hrInterface, loggedInUsername);
+            c_details.setVisible(true);
+            this.dispose();
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(ClientHomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_update_personal_details_buttonActionPerformed
 
     private void check_payroll_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_payroll_buttonActionPerformed
-        ClientPayroll c_payroll = new ClientPayroll(hrInterface, loggedInUsername);
-        c_payroll.setVisible(true);
-        this.dispose();
+        try {
+            ClientPayroll c_payroll = new ClientPayroll(hrInterface, loggedInUsername);
+            c_payroll.setVisible(true);
+            this.dispose();
+        } 
+        catch (RemoteException ex) {
+            Logger.getLogger(ClientHomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_check_payroll_buttonActionPerformed
 
     private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout_buttonActionPerformed
@@ -159,7 +149,7 @@ public class ClientHomepage extends javax.swing.JFrame {
         if (dialog == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(null,"Logout successfully", "Success",
                 JOptionPane.INFORMATION_MESSAGE);
-            LoginModel login_model = new LoginModel("username", "password");
+            LoginModel login_model = new LoginModel();
             new Login(hrInterface, login_model).setVisible(true);
             this.dispose();
         }

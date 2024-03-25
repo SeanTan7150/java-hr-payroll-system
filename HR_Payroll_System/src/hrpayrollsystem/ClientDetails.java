@@ -1,5 +1,6 @@
 package hrpayrollsystem;
 
+import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,49 +17,56 @@ public class ClientDetails extends javax.swing.JFrame {
     /**
      * Creates new form client_details
      */
-    public ClientDetails(Interface hrInterface, String loggedInUsername) {
+    public ClientDetails(Interface hrInterface, String loggedInUsername) throws RemoteException {
         initComponents();
         this.hrInterface = hrInterface;
         this.loggedInUsername = loggedInUsername;
         try {
-            displayUserData(loggedInUsername);
+            displayUserData();
         } catch (SQLException ex) {
             // Handle SQLException
             ex.printStackTrace();
         }
     }
     
-    private void displayUserData(String loggedInUsername) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
+    private void displayUserData() throws SQLException, RemoteException {
+        Employee employee = hrInterface.getEmployeeBasicDetails(loggedInUsername);
+        employee_id_field.setText(employee.getEmployeeId());
+        first_name_field.setText(employee.getFirstName());
+        last_name_field.setText(employee.getLastName());
+        ic_passport_no_field.setText(employee.getIcNumber()); //int must be converted into string before set in the field
+        email_field.setText(employee.getEmail());
+        age_field.setText(String.valueOf(employee.getAge()));
+//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
 
         // Query to retrieve additional data for the logged-in user
-        String query = "SELECT employee_id, username, first_name, last_name, ic_passport_no, email, age FROM employee WHERE username = ?";
-        PreparedStatement stm = conn.prepareStatement(query);
-        stm.setString(1, loggedInUsername);
-        
-        ResultSet resultSet = stm.executeQuery();
-
-        if (resultSet.next()) {
-            // Display user data in the corresponding labels
-            String employeeID = resultSet.getString("employee_id");
-            String userName = resultSet.getString("username");
-            String firstName = resultSet.getString("first_name");
-            String lastName = resultSet.getString("last_name");
-            String ic_passport_no = resultSet.getString("ic_passport_no");
-            String email = resultSet.getString("email");
-            int age = resultSet.getInt("age");
-
-            jLabel1.setText("Personal Details - " + userName);
-            
-            employee_id_field.setText(employeeID);
-            first_name_field.setText(firstName);
-            last_name_field.setText(lastName);
-            ic_passport_no_field.setText(ic_passport_no); //int must be converted into string before set in the field
-            email_field.setText(email);
-            age_field.setText(String.valueOf(age));
-        }
-
-        conn.close();
+//        String query = "SELECT employee_id, username, first_name, last_name, ic_passport_no, email, age FROM employee WHERE username = ?";
+//        PreparedStatement stm = conn.prepareStatement(query);
+//        stm.setString(1, loggedInUsername);
+//        
+//        ResultSet resultSet = stm.executeQuery();
+//
+//        if (resultSet.next()) {
+//            // Display user data in the corresponding labels
+//            String employeeID = resultSet.getString("employee_id");
+//            String userName = resultSet.getString("username");
+//            String firstName = resultSet.getString("first_name");
+//            String lastName = resultSet.getString("last_name");
+//            String ic_passport_no = resultSet.getString("ic_passport_no");
+//            String email = resultSet.getString("email");
+//            int age = resultSet.getInt("age");
+//
+//            jLabel1.setText("Personal Details - " + userName);
+//            
+//            employee_id_field.setText(employeeID);
+//            first_name_field.setText(firstName);
+//            last_name_field.setText(lastName);
+//            ic_passport_no_field.setText(ic_passport_no); //int must be converted into string before set in the field
+//            email_field.setText(email);
+//            age_field.setText(String.valueOf(age));
+//        }
+//
+//        conn.close();
     }
 
     /**
@@ -261,102 +269,153 @@ public class ClientDetails extends javax.swing.JFrame {
     }//GEN-LAST:event_first_name_fieldActionPerformed
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
-
-            // Query to retrieve existing user data
-            String selectQuery = "SELECT employee_id, first_name, last_name, email, age FROM employee WHERE username=?";
-            PreparedStatement selectStm = conn.prepareStatement(selectQuery);
-            selectStm.setString(1, loggedInUsername);
-
-            ResultSet existing_emp_data = selectStm.executeQuery();
-
-            if (existing_emp_data.next()) {
-                // Retrieve existing user data from the db
-                String db_firstName = existing_emp_data.getString("first_name");
-                String db_lastName = existing_emp_data.getString("last_name");
-                String db_email = existing_emp_data.getString("email");
-                String dbAge = existing_emp_data.getString("age");
+        String formFirstName = first_name_field.getText();
+        String formLastName = last_name_field.getText();
+        String formEmail = email_field.getText();
+        String formAge = age_field.getText();
+        
+        if (formFirstName.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (!formFirstName.matches("^[a-zA-Z]+$")) {
+            JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (formLastName.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (!formLastName.matches("^[a-zA-Z]+$")) {
+            JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (formEmail.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (!formEmail.matches("^(.+)@(.+)$")) {
+            JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+        } 
+        else if (formAge.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (!formAge.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+        } 
+        else if (formAge.length() > 2) {
+            JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
+                    JOptionPane.WARNING_MESSAGE);
+        } 
+        else {
+            try {
+                JOptionPane.showMessageDialog(null, "Data successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+                hrInterface.updateEmployee(loggedInUsername, formFirstName, formLastName, formEmail, Integer.parseInt(formAge));
+            } 
+            catch (RemoteException ex) {
+                Logger.getLogger(ClientDetails.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+//        try {
+//            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
+//
+//            // Query to retrieve existing user data
+//            String selectQuery = "SELECT employee_id, first_name, last_name, email, age FROM employee WHERE username=?";
+//            PreparedStatement selectStm = conn.prepareStatement(selectQuery);
+//            selectStm.setString(1, loggedInUsername);
+//
+//            ResultSet existing_emp_data = selectStm.executeQuery();
+//
+//            if (existing_emp_data.next()) {
+//                // Retrieve existing user data from the db
+//                String db_firstName = existing_emp_data.getString("first_name");
+//                String db_lastName = existing_emp_data.getString("last_name");
+//                String db_email = existing_emp_data.getString("email");
+//                String dbAge = existing_emp_data.getString("age");
 
                 // Get user data from the form
-                String formFirstName = first_name_field.getText();
-                String formLastName = last_name_field.getText();
-                String formEmail = email_field.getText();
-                String formAge = age_field.getText();
+//                String formFirstName = first_name_field.getText();
+//                String formLastName = last_name_field.getText();
+//                String formEmail = email_field.getText();
+//                String formAge = age_field.getText();
 
                 // Compare the existing data with the form data
-                if (db_firstName.equals(formFirstName) && db_lastName.equals(formLastName)
-                    && db_email.equals(formEmail) && dbAge.equals(formAge)) {
-                    JOptionPane.showMessageDialog(null, "No changes are made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
-                } 
-                else if(formFirstName.isEmpty())
-                {
-                    JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if (!formFirstName.matches("^[a-zA-Z]+$")) 
-                {
-                    JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if(formLastName.isEmpty())
-                {
-                    JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if (!formLastName.matches("^[a-zA-Z]+$")) 
-                {
-                    JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if(formEmail.isEmpty())
-                {
-                    JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if (!formEmail.matches("^(.+)@(.+)$")) {
-                    JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
-                            JOptionPane.ERROR_MESSAGE);
-                }
-                else if(formAge.isEmpty())
-                {
-                    JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if (!formAge.matches("\\d+")) {
-                    JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
-                            JOptionPane.ERROR_MESSAGE);
-                } 
-                else if (formAge.length() > 2) {
-                    JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
-                            JOptionPane.WARNING_MESSAGE);
-                } 
-                else {
-                    // Update the user data in the database
-                    String updateQuery = "UPDATE employee SET first_name=?, last_name=?, email=?, age=? WHERE username=?";
-                    PreparedStatement updateStm = conn.prepareStatement(updateQuery);
-                    updateStm.setString(1, formFirstName);
-                    updateStm.setString(2, formLastName);
-                    updateStm.setString(3, formEmail);
-                    updateStm.setString(4, formAge);
-                    updateStm.setString(5, loggedInUsername);
+//                if (db_firstName.equals(formFirstName) && db_lastName.equals(formLastName)
+//                    && db_email.equals(formEmail) && dbAge.equals(formAge)) {
+//                    JOptionPane.showMessageDialog(null, "No changes are made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
+//                } 
+//                if(formFirstName.isEmpty())
+//                {
+//                    JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if (!formFirstName.matches("^[a-zA-Z]+$")) 
+//                {
+//                    JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if(formLastName.isEmpty())
+//                {
+//                    JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if (!formLastName.matches("^[a-zA-Z]+$")) 
+//                {
+//                    JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if(formEmail.isEmpty())
+//                {
+//                    JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if (!formEmail.matches("^(.+)@(.+)$")) {
+//                    JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
+//                            JOptionPane.ERROR_MESSAGE);
+//                }
+//                else if(formAge.isEmpty())
+//                {
+//                    JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
+//                            JOptionPane.WARNING_MESSAGE);
+//                }
+//                else if (!formAge.matches("\\d+")) {
+//                    JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
+//                            JOptionPane.ERROR_MESSAGE);
+//                } 
+//                else if (formAge.length() > 2) {
+//                    JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
+//                            JOptionPane.WARNING_MESSAGE);
+//                } 
+//                else {
+//                    // Update the user data in the database
+//                    String updateQuery = "UPDATE employee SET first_name=?, last_name=?, email=?, age=? WHERE username=?";
+//                    PreparedStatement updateStm = conn.prepareStatement(updateQuery);
+//                    updateStm.setString(1, formFirstName);
+//                    updateStm.setString(2, formLastName);
+//                    updateStm.setString(3, formEmail);
+//                    updateStm.setString(4, formAge);
+//                    updateStm.setString(5, loggedInUsername);
+//
+//                    int rowsAffected = updateStm.executeUpdate();
+//
+//                    if (rowsAffected > 0) {
+//                        JOptionPane.showMessageDialog(null, "Data successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+//                    } else {
+//                        JOptionPane.showMessageDialog(null, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+//                    }
+//
+//                }
+//           }
 
-                    int rowsAffected = updateStm.executeUpdate();
-
-                    if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(null, "Data successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                }
-            }
-
-            conn.close();
-        } catch (SQLException | NumberFormatException ex) {
-            Logger.getLogger(ClientDetails.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Error updating data", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//            conn.close();
+//        } catch (SQLException | NumberFormatException ex) {
+//            Logger.getLogger(ClientDetails.class.getName()).log(Level.SEVERE, null, ex);
+//            JOptionPane.showMessageDialog(null, "Error updating data", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_update_buttonActionPerformed
 
     private void age_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_age_fieldActionPerformed
@@ -368,42 +427,6 @@ public class ClientDetails extends javax.swing.JFrame {
         c_homepage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_back_buttonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(ClientDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ClientDetails("loggedInUsername").setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField age_field;
