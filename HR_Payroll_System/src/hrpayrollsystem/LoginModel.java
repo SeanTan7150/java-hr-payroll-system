@@ -16,7 +16,8 @@ public class LoginModel implements java.io.Serializable{
             this.password = (String) is.readObject();
             is.close();
         } catch(Exception ex){
-        ex.printStackTrace();
+            this.username = "";
+            this.password = "";
         }
 
     
