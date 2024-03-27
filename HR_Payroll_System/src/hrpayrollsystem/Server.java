@@ -11,6 +11,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -32,8 +33,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -322,6 +325,7 @@ public class Server extends UnicastRemoteObject implements Interface {
 
     @Override
     public void sendMailOTP(String username, int otp) throws RemoteException {
+        String email = "";
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
             try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
@@ -331,48 +335,113 @@ public class Server extends UnicastRemoteObject implements Interface {
                     pstm.setString(1, username);
 
                     ResultSet rs = pstm.executeQuery();
-                    String email = null;
                     if (rs.next()) {
                         email = rs.getString(1);
                     }
-
-                    // Setup SMTP server properties
-                    Properties props = System.getProperties();
-                    props.put("mail.smtp.starttls.enable", "true");
-                    props.put("mail.smtp.host", "smtp.gmail.com");
-                    props.put("mail.smtp.port", "587");
-                    props.put("mail.smtp.auth", "true");
-
-                    Session newSession = Session.getDefaultInstance(props, null);
-
-                    String from = "dcomsnoreply@gmail.com"; //dcoms123
-                    String password = "zfod kmoz ztcz iuwc";
-                    String host = "smtp.gmail.com";
-                    String subject = "Password Reset for the Payroll System";
-                    String body = "Hi, " + username + ". \nYour OTP for password reset is " + otp
-                            + ". Please enter the received OTP when resetting your password within 30 minutes. "
-                            + "If you didn't request a password reset, please ignore this email. \n\n\nSincerely, \nAdmin";
-
-                    Message msg = new MimeMessage(newSession);
-                    msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-                    msg.setSubject(subject);
-                    msg.setText(body);
-
-                    try (Transport transport = newSession.getTransport("smtp")) {
-                        transport.connect(host, from, password);
-                        transport.sendMessage(msg, msg.getAllRecipients());
-                    }
-                    conn.commit();
-                    conn.close();
-                } catch (AddressException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (MessagingException ex) {
+                } catch (SQLException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+
+            // use the Gmail SMTP server to send emails through JavaMail
+            final String sender_username = "chyepeng2108@gmail.com";
+            final String password = "llgu euxd qxbf hmbd"; //actual app password in the google acc
+
+            String subject = " Password Reset for the Payroll System";
+            String message = "Hi, " + username + ". \nYour OTP for password reset is " + otp
+                    + ". Please enter the received OTP when resetting your password within 30 minutes. "
+                    + "If you didn't request a password reset, please ignore this email. "
+                    + "\n\n\nSincerely, \nAdmin";
+
+            try {
+                Properties props = System.getProperties();
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "587");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.required", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+
+                // creates a new session with an authenticator
+                Authenticator auth = new Authenticator() {
+                    public PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(sender_username, password);
+                    }
+                };
+
+                Session session = Session.getInstance(props, auth);
+
+                // creates a new e-mail message
+                Message msg = new MimeMessage(session);
+                msg.setFrom(new InternetAddress(email, sender_username));
+                InternetAddress[] toAddresses = {new InternetAddress(email)};
+                msg.setRecipients(Message.RecipientType.TO, toAddresses);
+                msg.setSubject(subject);
+                msg.setSentDate(new Date());
+                msg.setText(message);
+
+                // send email
+                Transport.send(msg);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MessagingException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+//        try {
+//            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+//            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
+//                String sql = "SELECT EMAIL FROM employee WHERE USERNAME = ?";
+//
+//                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+//                    pstm.setString(1, username);
+//
+//                    ResultSet rs = pstm.executeQuery();
+//                    String email = null;
+//                    if (rs.next()) {
+//                        email = rs.getString(1);
+//                    }
+//
+//                    // Setup SMTP server properties
+//                    Properties props = System.getProperties();
+//                    props.put("mail.smtp.starttls.enable", "true");
+//                    props.put("mail.smtp.host", "smtp.gmail.com");
+//                    props.put("mail.smtp.port", "587");
+//                    props.put("mail.smtp.auth", "true");
+//
+//                    Session newSession = Session.getDefaultInstance(props, null);
+//
+//                    String from = "chyepeng2108@gmail.com"; //dcoms123
+//                    String password = "llgu euxd qxbf hmbd";
+//                    String host = "smtp.gmail.com";
+//                    String subject = "Password Reset for the Payroll System";
+//                    String body = "Hi, " + username + ". \nYour OTP for password reset is " + otp
+//                            + ". Please enter the received OTP when resetting your password within 30 minutes. "
+//                            + "If you didn't request a password reset, please ignore this email. \n\n\nSincerely, \nAdmin";
+//
+//                    Message msg = new MimeMessage(newSession);
+//                    msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+//                    msg.setSubject(subject);
+//                    msg.setText(body);
+//
+//                    try (Transport transport = newSession.getTransport("smtp")) {
+//                        transport.connect(host, from, password);
+//                        transport.sendMessage(msg, msg.getAllRecipients());
+//                    }
+//                    conn.commit();
+//                    conn.close();
+//                } catch (AddressException ex) {
+//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (MessagingException ex) {
+//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     @Override
@@ -1027,27 +1096,35 @@ public class Server extends UnicastRemoteObject implements Interface {
     @Override
     public ValidationResult validateForgottenPassword(String username) throws RemoteException {
         ValidationResult isForgottenPasswordValid = new ValidationResult(true, "", "");
-        ExecutorService exe = Executors.newFixedThreadPool(2);
-        try {
-            List<Callable<ValidationResult>> validators = Arrays.asList(
-                    () -> validateUsername(username),
-                    () -> checkUsernameExist(username)
-            );
-
-            for (Callable<ValidationResult> validator : validators) {
-                ValidationResult result = exe.submit(validator).get();
-                if (!result.isValid()) {
-                    isForgottenPasswordValid.setValid(false);
-                    isForgottenPasswordValid.setMessage(result.getMessage());
-                    isForgottenPasswordValid.setMessageType(result.getMessageType());
-                    break;
-                }
-            }
-        } catch (InterruptedException | ExecutionException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        if (validateUsername(username).isValid() && !checkUsernameExist(username).isValid()) {
+            return isForgottenPasswordValid;
+        } else {
+            isForgottenPasswordValid.setValid(false);
+//            isForgottenPasswordValid.setMessage(result.getMessage());
+//            isForgottenPasswordValid.setMessageType(result.getMessageType());
+            return isForgottenPasswordValid;
         }
-        exe.shutdown();
-        return isForgottenPasswordValid;
+//        ExecutorService exe = Executors.newFixedThreadPool(2);
+//        try {
+//            List<Callable<ValidationResult>> validators = Arrays.asList(
+//                    () -> validateUsername(username),
+//                    () -> checkUsernameExist(username)
+//            );
+//
+//            for (Callable<ValidationResult> validator : validators) {
+//                ValidationResult result = exe.submit(validator).get();
+//                if (!result.isValid()) {
+//                    isForgottenPasswordValid.setValid(false);
+//                    isForgottenPasswordValid.setMessage(result.getMessage());
+//                    isForgottenPasswordValid.setMessageType(result.getMessageType());
+//                    break;
+//                }
+//            }
+//        } catch (InterruptedException | ExecutionException ex) {
+//            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        exe.shutdown();
+//        return isForgottenPasswordValid;
     }
 
     public ValidationResult validateChangePassword(String enteredOTP, int storedOTP, long storedTimestamp, String newPassword, String confirmPassword) {

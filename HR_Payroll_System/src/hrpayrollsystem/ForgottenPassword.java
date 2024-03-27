@@ -230,6 +230,10 @@ public class ForgottenPassword extends javax.swing.JFrame {
                 // Store the generated OTP and the user's email for verification later
                 storedOTP = otp;
                 storedTimestamp = timestamp;
+                JOptionPane.showMessageDialog(this, "OTP sent to your email address. Check your inbox.");
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "User not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
             
 //        // check if the username exists in db
@@ -446,6 +450,10 @@ public class ForgottenPassword extends javax.swing.JFrame {
         else {
             JOptionPane.showMessageDialog(this, "Invalid OTP. Password update failed.");
         }
+        
+        Login login = new Login(hrInterface, new LoginModel());
+        login.setVisible(true);
+        dispose();
 
     }//GEN-LAST:event_update_buttonActionPerformed
 
