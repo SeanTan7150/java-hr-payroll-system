@@ -42,6 +42,8 @@
                   <Group type="102" attributes="0">
                       <Component id="employeeListLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="logoutButton" min="-2" pref="102" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="generatePayrollReportButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="employeeListScrollPane" alignment="0" pref="970" max="32767" attributes="0"/>
@@ -57,9 +59,10 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="employeeListLabel" max="32767" attributes="0"/>
                   <Component id="generatePayrollReportButton" max="32767" attributes="0"/>
+                  <Component id="logoutButton" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="employeeListScrollPane" pref="506" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="employeeListScrollPane" pref="508" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -143,6 +146,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generatePayrollReportButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="logoutButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Logout"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
