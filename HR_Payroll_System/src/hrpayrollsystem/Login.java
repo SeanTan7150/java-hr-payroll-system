@@ -14,10 +14,7 @@ import java.util.logging.Logger;
 public class Login extends javax.swing.JFrame { 
     private Interface hrInterface;
     private LoginModel loginModel;
-    
-    /**
-     * Creates new form login
-     */
+
     public Login(Interface hrInterface, LoginModel login_model) {
         initComponents();
         this.hrInterface = hrInterface;
@@ -248,28 +245,7 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
+        }    
         username_field.setText("");
         password_field.setText("");
     }//GEN-LAST:event_login_buttonActionPerformed
