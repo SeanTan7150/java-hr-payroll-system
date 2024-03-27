@@ -1018,7 +1018,7 @@ public class Server extends UnicastRemoteObject implements Interface {
         } else if (!"employee".equals(role) && !"admin".equals(role)) {
             return new ValidationResult(false, "login failed due to the unknown user role", "Error");
         }
-        return new ValidationResult(true, "", "");
+        return new ValidationResult(true, "login successfully", "Success");
     }
 
     // Return true if input fields are valid
@@ -1068,7 +1068,7 @@ public class Server extends UnicastRemoteObject implements Interface {
     // Else, return false, error message, and error type
     @Override
     public ValidationResult validateLogin(String username, String password) throws RemoteException {
-        ValidationResult isLoginValid = new ValidationResult(true, "", "");
+        ValidationResult isLoginValid = new ValidationResult(true, "login successfully", "Success");
         ExecutorService exe = Executors.newFixedThreadPool(3);
         try {
             List<Callable<ValidationResult>> validators = Arrays.asList(
