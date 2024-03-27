@@ -187,23 +187,8 @@ public class Login extends javax.swing.JFrame {
         String password = new String(password_field.getPassword());
         
         try {
-            if(uname.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!uname.matches("^[a-zA-Z]+$")) 
-            {
-                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(password.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-
-            else if (hrInterface.validateLogin(uname, password).isValid()) {
+            ValidationResult v = hrInterface.validateLogin(uname, password);
+            if (v.isValid()) {
                 JOptionPane.showMessageDialog(null,"login successfully", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
 
@@ -223,24 +208,65 @@ public class Login extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null,"login failed due to the unknown user role", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 }
-                
-                
-//                // Create an instance of the login page object
-//                login loginPage = new login(uname, password);
-//
-//                // Use the ObjectOutputStream class to serialize the login page object and write it to a file
-//                FileOutputStream fileOut = new FileOutputStream("loginPage.ser");
-//                ObjectOutputStream out = new ObjectOutputStream(fileOut);
-//                out.writeObject(loginPage);
-//                out.close();
-//                fileOut.close();
-//                System.out.println("successfully serialized");
-                
             }
             else {
-                JOptionPane.showMessageDialog(null,"login failed", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, v.getMessage(), v.getMessageType(),
+                        JOptionPane.WARNING_MESSAGE);
             }
+//            if(uname.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!uname.matches("^[a-zA-Z]+$")) 
+//            {
+//                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(password.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//
+//            else if (hrInterface.validateLogin(uname, password).isValid()) {
+//                JOptionPane.showMessageDialog(null,"login successfully", "Success",
+//                        JOptionPane.INFORMATION_MESSAGE);
+//
+//                String role = hrInterface.getUserRole(uname);
+//                loginModel.serializeLogin(uname, password);
+//                if ("employee".equals(role)) {
+//                    ClientHomepage c_home = new ClientHomepage(hrInterface, uname);
+//                    c_home.setVisible(true);
+//                    this.dispose();
+//                } 
+//                else if ("admin".equals(role)){
+//                    AdminPage adminPage = new AdminPage(hrInterface);
+//                    adminPage.setVisible(true);
+//                    this.dispose();
+//                }
+//                else {
+//                    JOptionPane.showMessageDialog(null,"login failed due to the unknown user role", "Error",
+//                        JOptionPane.ERROR_MESSAGE);
+//                }
+//                
+//                
+////                // Create an instance of the login page object
+////                login loginPage = new login(uname, password);
+////
+////                // Use the ObjectOutputStream class to serialize the login page object and write it to a file
+////                FileOutputStream fileOut = new FileOutputStream("loginPage.ser");
+////                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+////                out.writeObject(loginPage);
+////                out.close();
+////                fileOut.close();
+////                System.out.println("successfully serialized");
+//                
+//            }
+//            else {
+//                JOptionPane.showMessageDialog(null,"login failed", "Error",
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
         } catch (RemoteException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

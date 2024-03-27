@@ -266,96 +266,108 @@ public class Registration extends javax.swing.JFrame {
 //        }
         
         try {
-            //check input validation
-            if(uname.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!uname.matches("^[a-zA-Z]+$")) 
-            {
-                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(fname.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!fname.matches("^[a-zA-Z]+$")) 
-            {
-                JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(lname.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!lname.matches("^[a-zA-Z]+$")) 
-            {
-                JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(ic_passport_no.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (ic_passport_no.matches("^[a-zA-Z]*$")) {
-                JOptionPane.showMessageDialog(null, "IC should be number only, Passport number should be letters and number", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(email.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!email.matches("^(.+)@(.+)$")) {
-                JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            else if(age.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if (!age.matches("\\d+")) {
-                JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
-                        JOptionPane.ERROR_MESSAGE);
-            } 
-            else if (age.length() > 2) {
-                JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE);
-            } 
-            else if(pass.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(re_pass.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "Add your confirmed password", "Missing Value",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-            else if(!pass.equals(re_pass))
-            {
-                JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            else if(!hrInterface.checkUsernameExist(uname).isValid())
-            {
-                JOptionPane.showMessageDialog(null, "This username already exists", "Invalid Input",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-
-            else{
+            ValidationResult v = hrInterface.validateRegistration(uname, fname, lname, ic_passport_no, email, age, pass, re_pass);
+            if (v.isValid()) {
                 Employee newEmployee = new Employee(uname, pass, fname, lname, ic_passport_no, employeeID, email, Integer.parseInt(age));
                 hrInterface.insertEmployee(newEmployee);
                 Login login = new Login(hrInterface, new LoginModel());
                 login.setVisible(true);
                 dispose();
             }
+            else {
+                JOptionPane.showMessageDialog(null, v.getMessage(), v.getMessageType(),
+                        JOptionPane.WARNING_MESSAGE);
+            }
+//            //check input validation
+//            if(uname.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!uname.matches("^[a-zA-Z]+$")) 
+//            {
+//                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(fname.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!fname.matches("^[a-zA-Z]+$")) 
+//            {
+//                JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(lname.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!lname.matches("^[a-zA-Z]+$")) 
+//            {
+//                JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(ic_passport_no.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (ic_passport_no.matches("^[a-zA-Z]*$")) {
+//                JOptionPane.showMessageDialog(null, "IC should be number only, Passport number should be letters and number", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(email.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!email.matches("^(.+)@(.+)$")) {
+//                JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
+//            else if(age.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if (!age.matches("\\d+")) {
+//                JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
+//                        JOptionPane.ERROR_MESSAGE);
+//            } 
+//            else if (age.length() > 2) {
+//                JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
+//                        JOptionPane.WARNING_MESSAGE);
+//            } 
+//            else if(pass.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(re_pass.isEmpty())
+//            {
+//                JOptionPane.showMessageDialog(null, "Add your confirmed password", "Missing Value",
+//                        JOptionPane.WARNING_MESSAGE);
+//            }
+//            else if(!pass.equals(re_pass))
+//            {
+//                JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
+//            else if(!hrInterface.checkUsernameExist(uname).isValid())
+//            {
+//                JOptionPane.showMessageDialog(null, "This username already exists", "Invalid Input",
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
+//
+//            else{
+//                Employee newEmployee = new Employee(uname, pass, fname, lname, ic_passport_no, employeeID, email, Integer.parseInt(age));
+//                hrInterface.insertEmployee(newEmployee);
+//                Login login = new Login(hrInterface, new LoginModel());
+//                login.setVisible(true);
+//                dispose();
+//            }
         } 
         catch (RemoteException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
