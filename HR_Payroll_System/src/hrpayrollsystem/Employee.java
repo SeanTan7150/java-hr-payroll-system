@@ -22,9 +22,6 @@ public class Employee implements Serializable {
     private double incomeTax;
     private ArrayList<Deduction> deductionList;
     
-//    public static final double EPF = 0.09; // get data from server maybe
-//    public static final double SOCSO = 0.005;
-    
     public Employee(String username, String password, String firstName, String lastName, String icNumber, String employeeId, String email, int age) {
         this.username = username;
         this.password = password;

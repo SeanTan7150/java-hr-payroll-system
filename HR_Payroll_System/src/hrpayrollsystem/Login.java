@@ -213,60 +213,6 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, v.getMessage(), v.getMessageType(),
                         JOptionPane.WARNING_MESSAGE);
             }
-//            if(uname.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!uname.matches("^[a-zA-Z]+$")) 
-//            {
-//                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(password.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//
-//            else if (hrInterface.validateLogin(uname, password).isValid()) {
-//                JOptionPane.showMessageDialog(null,"login successfully", "Success",
-//                        JOptionPane.INFORMATION_MESSAGE);
-//
-//                String role = hrInterface.getUserRole(uname);
-//                loginModel.serializeLogin(uname, password);
-//                if ("employee".equals(role)) {
-//                    ClientHomepage c_home = new ClientHomepage(hrInterface, uname);
-//                    c_home.setVisible(true);
-//                    this.dispose();
-//                } 
-//                else if ("admin".equals(role)){
-//                    AdminPage adminPage = new AdminPage(hrInterface);
-//                    adminPage.setVisible(true);
-//                    this.dispose();
-//                }
-//                else {
-//                    JOptionPane.showMessageDialog(null,"login failed due to the unknown user role", "Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//                }
-//                
-//                
-////                // Create an instance of the login page object
-////                login loginPage = new login(uname, password);
-////
-////                // Use the ObjectOutputStream class to serialize the login page object and write it to a file
-////                FileOutputStream fileOut = new FileOutputStream("loginPage.ser");
-////                ObjectOutputStream out = new ObjectOutputStream(fileOut);
-////                out.writeObject(loginPage);
-////                out.close();
-////                fileOut.close();
-////                System.out.println("successfully serialized");
-//                
-//            }
-//            else {
-//                JOptionPane.showMessageDialog(null,"login failed", "Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
         } catch (RemoteException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -297,36 +243,6 @@ public class Login extends javax.swing.JFrame {
         forgotten_pw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_forgot_pw_buttonActionPerformed
-
-//    private boolean login_validation(String uname, String password) throws SQLException 
-//    {
-//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
-//        PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");  
-//        stm.setString(1, uname);
-//        stm.setString(2, password); 
-//        
-//        ResultSet resultSet = stm.executeQuery();
-//        boolean isValid = resultSet.next();
-//        resultSet.close(); 
-//        stm.close();
-//        conn.close(); 
-//        return isValid;
-//    }
-//    
-//    private String get_role(String uname) throws SQLException 
-//    {
-//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); //db connection link, db username, db pw
-//        PreparedStatement stm = conn.prepareStatement("SELECT role FROM employee WHERE username = ?");  
-//        stm.setString(1, uname);
-//        
-//        ResultSet resultSet = stm.executeQuery();
-//        String role = null;
-//        if (resultSet.next()) {
-//            role = resultSet.getString("role");
-//        }
-//        conn.close(); 
-//        return role;
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton forgot_pw_button;

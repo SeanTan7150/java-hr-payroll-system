@@ -144,8 +144,6 @@ public class ClientChangePassword extends javax.swing.JFrame {
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
         
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
-
             String old_pw = String.valueOf(old_pw_field.getPassword());
             String new_pw = String.valueOf(new_pw_field.getPassword());
             String re_pass = String.valueOf(confirm_new_pw_field.getPassword());
@@ -170,11 +168,6 @@ public class ClientChangePassword extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Retype your confirmed new password again", "Invalid Input",
                 JOptionPane.ERROR_MESSAGE);
             }
-                
-            // Query to retrieve existing user data
-//            String selectQuery = "SELECT password FROM employee WHERE username=?";
-//            PreparedStatement selectStm = conn.prepareStatement(selectQuery);
-//            selectStm.setString(1, loggedInUsername);
             
             ValidationResult userValidation = hrInterface.validateLogin(loggedInUsername, old_pw);
             
@@ -187,70 +180,7 @@ public class ClientChangePassword extends javax.swing.JFrame {
             }
             else {
                 JOptionPane.showMessageDialog(null, userValidation.getMessage());
-            }
-            
-//            ResultSet existing_emp_data = selectStm.executeQuery();
-//
-//            if (existing_emp_data.next()) {
-//                // Retrieve existing user data from the db
-//                String db_password = existing_emp_data.getString("password");
-                
-
-                // Get user data from the form
-//                String old_pw = String.valueOf(old_pw_field.getPassword());
-//                String new_pw = String.valueOf(new_pw_field.getPassword());
-//                String re_pass = String.valueOf(confirm_new_pw_field.getPassword());
-
-                // Compare the existing data with the form data
-//                if(old_pw.isEmpty())
-//                {
-//                    JOptionPane.showMessageDialog(null, "Add your old password", "Missing Value",
-//                            JOptionPane.WARNING_MESSAGE);
-//                }
-//                else if(new_pw.isEmpty())
-//                {
-//                    JOptionPane.showMessageDialog(null, "Add your new password", "Missing Value",
-//                            JOptionPane.WARNING_MESSAGE);
-//                }
-//                else if(re_pass.isEmpty())
-//                {
-//                    JOptionPane.showMessageDialog(null, "Add your confirmed new password", "Missing Value",
-//                            JOptionPane.WARNING_MESSAGE);
-//                }
-//                else if (!db_password.equals(old_pw) ) {
-//                    JOptionPane.showMessageDialog(null, "Your old password is incorrect", "Incorrect", 
-//                            JOptionPane.INFORMATION_MESSAGE);
-//                } 
-//                else if(!new_pw.equals(re_pass))
-//                {
-//                    JOptionPane.showMessageDialog(null, "Retype your confirmed new password again", "Invalid Input",
-//                            JOptionPane.ERROR_MESSAGE);
-//                }
-//                else {
-                    // Update the user data in the database
-//                    String updateQuery = "UPDATE employee SET password=? WHERE username=?";
-//                    PreparedStatement updateStm = conn.prepareStatement(updateQuery);
-//                    updateStm.setString(1, new_pw);
-//                    updateStm.setString(2, loggedInUsername);
-//
-//                    int rowsAffected = updateStm.executeUpdate();
-//
-//                    if (rowsAffected > 0) {
-//                        JOptionPane.showMessageDialog(null, "Your new password successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-//                    } else {
-//                        JOptionPane.showMessageDialog(null, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
-//                    }
-//
-//                    updateStm.close();
-
-                    
-//                } catch (RemoteException ex) {
-//            Logger.getLogger(ClientChangePassword.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//            }
-
-//            conn.close();
-            
+            } 
         } catch (NumberFormatException ex) {
             Logger.getLogger(ClientChangePassword.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error updating data", "Error", JOptionPane.ERROR_MESSAGE);

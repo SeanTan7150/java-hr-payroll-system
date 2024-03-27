@@ -390,58 +390,6 @@ public class Server extends UnicastRemoteObject implements Interface {
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        try {
-//            DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-//            try (Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB;create=true", "prs", "prs")) {
-//                String sql = "SELECT EMAIL FROM employee WHERE USERNAME = ?";
-//
-//                try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-//                    pstm.setString(1, username);
-//
-//                    ResultSet rs = pstm.executeQuery();
-//                    String email = null;
-//                    if (rs.next()) {
-//                        email = rs.getString(1);
-//                    }
-//
-//                    // Setup SMTP server properties
-//                    Properties props = System.getProperties();
-//                    props.put("mail.smtp.starttls.enable", "true");
-//                    props.put("mail.smtp.host", "smtp.gmail.com");
-//                    props.put("mail.smtp.port", "587");
-//                    props.put("mail.smtp.auth", "true");
-//
-//                    Session newSession = Session.getDefaultInstance(props, null);
-//
-//                    String from = "chyepeng2108@gmail.com"; //dcoms123
-//                    String password = "llgu euxd qxbf hmbd";
-//                    String host = "smtp.gmail.com";
-//                    String subject = "Password Reset for the Payroll System";
-//                    String body = "Hi, " + username + ". \nYour OTP for password reset is " + otp
-//                            + ". Please enter the received OTP when resetting your password within 30 minutes. "
-//                            + "If you didn't request a password reset, please ignore this email. \n\n\nSincerely, \nAdmin";
-//
-//                    Message msg = new MimeMessage(newSession);
-//                    msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-//                    msg.setSubject(subject);
-//                    msg.setText(body);
-//
-//                    try (Transport transport = newSession.getTransport("smtp")) {
-//                        transport.connect(host, from, password);
-//                        transport.sendMessage(msg, msg.getAllRecipients());
-//                    }
-//                    conn.commit();
-//                    conn.close();
-//                } catch (AddressException ex) {
-//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (MessagingException ex) {
-//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     @Override

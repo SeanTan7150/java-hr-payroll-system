@@ -246,25 +246,6 @@ public class Registration extends javax.swing.JFrame {
         String re_pass = String.valueOf(confirm_password_field.getPassword());
         String employeeID = null; 
         
-        //make the employee_id auto increase by 1 when register
-//        try {
-//        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs");
-//        Statement stm = conn.createStatement();
-//        ResultSet rs = stm.executeQuery("select max(employee_id) as max_emp_id from employee"); 
-//
-//            if (rs.next()) { //check if there are any results available in the rs 
-//                int maxEmpId = rs.getInt("max_emp_id");
-//                employeeID = String.valueOf(maxEmpId + 1); 
-//            } else {
-//                // Handle the case where there are no employees in the table
-//                // Start with 1 if the table is empty
-//                employeeID = "1"; 
-//            }
-//            
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
         try {
             ValidationResult v = hrInterface.validateRegistration(uname, fname, lname, ic_passport_no, email, age, pass, re_pass);
             if (v.isValid()) {
@@ -278,96 +259,6 @@ public class Registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, v.getMessage(), v.getMessageType(),
                         JOptionPane.WARNING_MESSAGE);
             }
-//            //check input validation
-//            if(uname.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your username", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!uname.matches("^[a-zA-Z]+$")) 
-//            {
-//                JOptionPane.showMessageDialog(null, "Enter your username using letters only", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(fname.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your first name", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!fname.matches("^[a-zA-Z]+$")) 
-//            {
-//                JOptionPane.showMessageDialog(null, "Enter your first name using letters only", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(lname.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your last name", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!lname.matches("^[a-zA-Z]+$")) 
-//            {
-//                JOptionPane.showMessageDialog(null, "Enter your last name using letters only", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(ic_passport_no.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your ic / passport number", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (ic_passport_no.matches("^[a-zA-Z]*$")) {
-//                JOptionPane.showMessageDialog(null, "IC should be number only, Passport number should be letters and number", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(email.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your email", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!email.matches("^(.+)@(.+)$")) {
-//                JOptionPane.showMessageDialog(null, "Your email address is invalid", "Invalid Input", 
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//            else if(age.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your age", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if (!age.matches("\\d+")) {
-//                JOptionPane.showMessageDialog(null, "Age must be an integer", "Invalid Input", 
-//                        JOptionPane.ERROR_MESSAGE);
-//            } 
-//            else if (age.length() > 2) {
-//                JOptionPane.showMessageDialog(null, "Enter a valid age (up to 2 digits)", "Invalid Input",
-//                        JOptionPane.WARNING_MESSAGE);
-//            } 
-//            else if(pass.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your password", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(re_pass.isEmpty())
-//            {
-//                JOptionPane.showMessageDialog(null, "Add your confirmed password", "Missing Value",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//            else if(!pass.equals(re_pass))
-//            {
-//                JOptionPane.showMessageDialog(null, "Retype your password again", "Invalid Input",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//            else if(!hrInterface.checkUsernameExist(uname).isValid())
-//            {
-//                JOptionPane.showMessageDialog(null, "This username already exists", "Invalid Input",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//
-//            else{
-//                Employee newEmployee = new Employee(uname, pass, fname, lname, ic_passport_no, employeeID, email, Integer.parseInt(age));
-//                hrInterface.insertEmployee(newEmployee);
-//                Login login = new Login(hrInterface, new LoginModel());
-//                login.setVisible(true);
-//                dispose();
-//            }
         } 
         catch (RemoteException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
@@ -402,29 +293,6 @@ public class Registration extends javax.swing.JFrame {
     private void password_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_fieldActionPerformed
         
     }//GEN-LAST:event_password_fieldActionPerformed
-
-//    public boolean check_username(String uname)throws SQLException
-//    {
-//        ResultSet rs;
-//        boolean checkUser = false;
-//        
-//        try {
-//            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/prsDB", "prs", "prs"); 
-//            PreparedStatement stm = conn.prepareStatement("SELECT * FROM employee WHERE username =?");  
-//                    
-//            stm.setString(1, uname);
-//            
-//            rs = stm.executeQuery();
-//            
-//            if(rs.next())
-//            {
-//                checkUser = true;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//         return checkUser;
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField age_field;

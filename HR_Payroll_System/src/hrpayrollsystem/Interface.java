@@ -55,26 +55,10 @@ public interface Interface extends Remote {
     
     public double calculateNetSalary(double basicSalary, double allowance, double deduction) throws RemoteException;
     
-    // VALIDATION
-//    public ValidationResult validateUsername(String username) throws RemoteException;
-//    
+    // VALIDATION  
     public ValidationResult checkUsernameExist(String username) throws RemoteException;
-//    
-//    public ValidationResult validateFirstName(String firstName) throws RemoteException;
-//    
-//    public ValidationResult validateLastName(String lastName) throws RemoteException;
-//    
-//    public ValidationResult validateICNumber(String icNumber) throws RemoteException;
-//    
-//    public ValidationResult validateEmail(String email) throws RemoteException;
-//    
-//    public ValidationResult validateAge(String age) throws RemoteException;
-//    
-//    public ValidationResult validatePassword(String password, String confirmPassword) throws RemoteException;
     
     public ValidationResult validateRegistration(String username, String firstName, String lastName, String icNumber, String email, String age, String password, String confirmPassword) throws RemoteException;
-
-//    public ValidationResult checkLogin(String username, String password) throws RemoteException;
     
     public ValidationResult validateLogin(String username, String password) throws RemoteException;
     
