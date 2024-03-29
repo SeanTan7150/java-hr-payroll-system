@@ -41,7 +41,7 @@ public class AdminPage extends javax.swing.JFrame {
                 try {
                     EmployeeDetailsPage employeeDetailsPage = new EmployeeDetailsPage(hrInterface, adminPage, employeeList.get(row));
                     employeeDetailsPage.setVisible(true);
-                    setAdminPageVisibility(false);
+                    dispose();
                 } 
                 catch (RemoteException ex) {
                     Logger.getLogger(AdminPage.class.getName()).log(Level.SEVERE, null, ex);

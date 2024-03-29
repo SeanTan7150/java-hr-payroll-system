@@ -33,8 +33,8 @@ public class AdminPayrollReportPage extends javax.swing.JFrame {
         double totalBasicSalary = 0, totalAllowance = 0, totalEPF = 0, totalSOCSO = 0, totalDeduction = 0, totalNetSalary = 0;
         for(Employee employee : employeeList) {
             tableCount++;
-            double empEPF = employee.getBasicSalary() * 0.09;
-            double empSOCSO = employee.getBasicSalary() * 0.005;
+            double empEPF = employee.getBasicSalary() * hrInterface.getEPF();
+            double empSOCSO = employee.getBasicSalary() * hrInterface.getSOCSO();
             Object[] emp = {tableCount, employee.getEmployeeId(), employee.getFirstName() + " " + employee.getLastName(), employee.getBasicSalary(),
             employee.getAllowance(), empEPF, empSOCSO, employee.getDeduction(currentMonth), employee.getNetSalary()};
             tableModel.addRow(emp);

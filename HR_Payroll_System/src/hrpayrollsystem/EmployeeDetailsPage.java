@@ -5,12 +5,14 @@ import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class EmployeeDetailsPage extends javax.swing.JFrame {
 
     private Interface hrInterface;
     private AdminPage adminPage;
     private Employee employee;
+    private boolean isErrorShown = false;
 
     public EmployeeDetailsPage(Interface hrInterface, AdminPage adminPage, Employee employee) throws RemoteException {
         initComponents();
@@ -426,15 +428,29 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
             int month = deductionMonthComboBox.getSelectedIndex() + 1;
             double deductionAmount = Double.parseDouble(deductionTextField.getText());
 
-            // Save values into database
-            hrInterface.updateEmployee(username, firstName, lastName, email, age);
-            hrInterface.updateEmployeeJobInformation(username, icNumber, employeeId, jobPosition);
-            hrInterface.updateEmployeeSalary(username, basicSalary, allowance);
-            hrInterface.updateEmployeeDeduction(username, employeeId, month, deductionAmount);
+            if (allowance < 0 || basicSalary < 0 || deductionAmount < 0) {
+                JOptionPane.showMessageDialog(this, "Invalid input! Salary information cannot be less than 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                
+                // Display salary information
+                allowanceTextField.setText(Double.toString(employee.getAllowance()));
+                basicSalaryTextField.setText(Double.toString(employee.getBasicSalary()));
+                grossSalaryText.setText(Double.toString(employee.getGrossSalary()));
+                netSalaryText.setText(Double.toString(employee.getNetSalary()));;
+                incomeTaxPercentageText.setText(Double.toString(employee.getIncomeTax()));
 
-            AdminPage adminPage = new AdminPage(hrInterface);
-            adminPage.setAdminPageVisibility(true);
-            dispose();
+                // Display monthly deduction information
+                deductionTextField.setText(Double.toString(employee.getDeduction(month)));
+            } else {
+                // Save values into database
+                hrInterface.updateEmployee(username, firstName, lastName, email, age);
+                hrInterface.updateEmployeeJobInformation(username, icNumber, employeeId, jobPosition);
+                hrInterface.updateEmployeeSalary(username, basicSalary, allowance);
+                hrInterface.updateEmployeeDeduction(username, employeeId, month, deductionAmount);
+
+                AdminPage adminPage = new AdminPage(hrInterface);
+                adminPage.setAdminPageVisibility(true);
+                dispose();
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -457,13 +473,19 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
             double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
             double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
             double deduction = Double.parseDouble(deductionTextField.getText());
-            
+
             // Set salary information
             incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
             grossSalaryText.setText(Double.toString(updatedGrossSalary));
             netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
-        } 
-        catch (RemoteException ex) {
+        } catch (NumberFormatException ex) {
+            if (!isErrorShown) {
+                isErrorShown = true;
+                JOptionPane.showMessageDialog(this, "Invalid basic salary input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                basicSalaryTextField.setText(Double.toString(employee.getBasicSalary()));
+                isErrorShown = false;
+            }
+        } catch (RemoteException ex) {
             Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_basicSalaryTextFieldFocusLost
@@ -475,13 +497,19 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
             double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
             double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
             double deduction = Double.parseDouble(deductionTextField.getText());
-            
+
             // Set salary information
             incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
             grossSalaryText.setText(Double.toString(updatedGrossSalary));
             netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
-        } 
-        catch (RemoteException ex) {
+        } catch (NumberFormatException ex) {
+            if (!isErrorShown) {
+                isErrorShown = true;
+                JOptionPane.showMessageDialog(this, "Invalid allowance input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                allowanceTextField.setText(Double.toString(employee.getAllowance()));
+                isErrorShown = false;
+            }
+        } catch (RemoteException ex) {
             Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_allowanceTextFieldFocusLost
@@ -493,13 +521,21 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
             double updatedAllowance = Double.parseDouble(allowanceTextField.getText());
             double updatedGrossSalary = updatedBasicSalary + updatedAllowance;
             double deduction = Double.parseDouble(deductionTextField.getText());
-            
+
             // Set salary information
             incomeTaxPercentageText.setText(Double.toString(hrInterface.getIncomeTaxPercentage(updatedBasicSalary) * 100) + "%");
             grossSalaryText.setText(Double.toString(updatedGrossSalary));
             netSalaryText.setText(Double.toString(hrInterface.calculateNetSalary(updatedBasicSalary, updatedAllowance, deduction)));
-        } 
-        catch (RemoteException ex) {
+        } catch (NumberFormatException ex) {
+            if (!isErrorShown) {
+                isErrorShown = true;
+                JOptionPane.showMessageDialog(this, "Invalid deduction input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                Calendar calendar = Calendar.getInstance();
+                int currentMonth = calendar.get(Calendar.MONTH) + 1;
+                deductionTextField.setText(Double.toString(employee.getDeduction(currentMonth)));
+                isErrorShown = false;
+            }
+        } catch (RemoteException ex) {
             Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_deductionTextFieldFocusLost
