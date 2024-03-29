@@ -122,21 +122,41 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
         firstNameLabel.setText("First Name");
 
         firstNameTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        firstNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                firstNameTextFieldFocusLost(evt);
+            }
+        });
 
         lastNameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         lastNameLabel.setText("Last Name");
 
         lastNameTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lastNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                lastNameTextFieldFocusLost(evt);
+            }
+        });
 
         icNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         icNumberLabel.setText("IC Number");
 
         icNumberTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        icNumberTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                icNumberTextFieldFocusLost(evt);
+            }
+        });
 
         emailLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         emailLabel.setText("Email");
 
         emailTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        emailTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                emailTextFieldFocusLost(evt);
+            }
+        });
 
         jobPositionTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
@@ -162,6 +182,11 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
         ageLabel.setText("Age");
 
         ageTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        ageTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ageTextFieldFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout personalInformationPanelLayout = new javax.swing.GroupLayout(personalInformationPanel);
         personalInformationPanel.setLayout(personalInformationPanelLayout);
@@ -430,7 +455,7 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
 
             if (allowance < 0 || basicSalary < 0 || deductionAmount < 0) {
                 JOptionPane.showMessageDialog(this, "Invalid input! Salary information cannot be less than 0.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
-                
+
                 // Display salary information
                 allowanceTextField.setText(Double.toString(employee.getAllowance()));
                 basicSalaryTextField.setText(Double.toString(employee.getBasicSalary()));
@@ -440,7 +465,7 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
 
                 // Display monthly deduction information
                 deductionTextField.setText(Double.toString(employee.getDeduction(month)));
-            } else {
+            } else if (!isErrorShown) {
                 // Save values into database
                 hrInterface.updateEmployee(username, firstName, lastName, email, age);
                 hrInterface.updateEmployeeJobInformation(username, icNumber, employeeId, jobPosition);
@@ -539,6 +564,82 @@ public class EmployeeDetailsPage extends javax.swing.JFrame {
             Logger.getLogger(EmployeeDetailsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_deductionTextFieldFocusLost
+
+    private void emailTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailTextFieldFocusLost
+        String email = emailTextField.getText();
+
+        if (email.isEmpty()) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Email cannot be empty! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            emailTextField.setText(employee.getEmail());
+            isErrorShown = false;
+        } else if (!email.matches("^(.+)@(.+)$")) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Invalid email input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            emailTextField.setText(employee.getEmail());
+            isErrorShown = false;
+        }
+    }//GEN-LAST:event_emailTextFieldFocusLost
+
+    private void ageTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ageTextFieldFocusLost
+        try {
+            int age = Integer.parseInt(ageTextField.getText());
+
+            if (age < 0 || age > 150) {
+                isErrorShown = true;
+                JOptionPane.showMessageDialog(this, "Invalid age input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                ageTextField.setText(Integer.toString(employee.getAge()));
+                isErrorShown = false;
+            }
+        } catch (NumberFormatException ex) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Invalid age input! Please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            ageTextField.setText(Integer.toString(employee.getAge()));
+            isErrorShown = false;
+        }
+    }//GEN-LAST:event_ageTextFieldFocusLost
+
+    private void firstNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_firstNameTextFieldFocusLost
+        if (firstNameTextField.getText().isEmpty()) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "First name cannot be empty! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            firstNameTextField.setText(employee.getFirstName());
+            isErrorShown = false;
+        } else if (!firstNameTextField.getText().matches("^[a-zA-Z]+$")) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "First name can only have letters! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            firstNameTextField.setText(employee.getFirstName());
+            isErrorShown = false;
+        }
+    }//GEN-LAST:event_firstNameTextFieldFocusLost
+
+    private void icNumberTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_icNumberTextFieldFocusLost
+        if (icNumberTextField.getText().isEmpty()) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "IC number cannot be empty! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            icNumberTextField.setText(employee.getIcNumber());
+            isErrorShown = false;
+        } else if (icNumberTextField.getText().matches("^[a-zA-Z]*$")) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Invalid IC number input! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            icNumberTextField.setText(employee.getIcNumber());
+            isErrorShown = false;
+        }
+    }//GEN-LAST:event_icNumberTextFieldFocusLost
+
+    private void lastNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lastNameTextFieldFocusLost
+        if (lastNameTextField.getText().isEmpty()) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Last name cannot be empty! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            lastNameTextField.setText(employee.getLastName());
+            isErrorShown = false;
+        } else if (!lastNameTextField.getText().matches("^[a-zA-Z]+$")) {
+            isErrorShown = true;
+            JOptionPane.showMessageDialog(this, "Last name can only have letters! Please try again", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            lastNameTextField.setText(employee.getLastName());
+            isErrorShown = false;
+        }
+    }//GEN-LAST:event_lastNameTextFieldFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ageLabel;

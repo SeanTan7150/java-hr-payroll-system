@@ -228,6 +228,9 @@
               <Font name="Tahoma" size="24" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="firstNameTextFieldFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lastNameLabel">
           <Properties>
@@ -243,6 +246,9 @@
               <Font name="Tahoma" size="24" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="lastNameTextFieldFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="icNumberLabel">
           <Properties>
@@ -258,6 +264,9 @@
               <Font name="Tahoma" size="24" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="icNumberTextFieldFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="emailLabel">
           <Properties>
@@ -273,6 +282,9 @@
               <Font name="Tahoma" size="24" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="emailTextFieldFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jobPositionTextField">
           <Properties>
@@ -346,6 +358,9 @@
               <Font name="Tahoma" size="24" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ageTextFieldFocusLost"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
